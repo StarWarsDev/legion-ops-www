@@ -1,58 +1,58 @@
 import React from "react"
-import clsx from "clsx"
-import { makeStyles } from "@material-ui/core/styles"
 import {
-    Grid,
-    Paper,
-    Typography
-} from "@material-ui/core";
-import Layout from "../components/Layout";
-import SEO from "../components/SEO";
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Typography,
+} from "@material-ui/core"
+import Layout from "../components/Layout"
+import SEO from "../components/SEO"
+import ActivityCard from "../components/ActivityCard"
+import EventsCard from "../components/EventsCard"
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: theme.spacing(2),
-        display: "flex",
-        overflow: "auto",
-        flexDirection: "column"
-    },
-    fixedHeight: {
-        height: 240
-    }
-}))
+const Welcome = () => (
+  <Card>
+    <CardContent>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Welcome!
+      </Typography>
+
+      <Typography variant="subtitle1" component="p">
+        Legion Ops makes organizing and running events for Star Wars Legion
+        easier than ever before!
+      </Typography>
+    </CardContent>
+    <CardActions>
+      <Button color="primary" variant="contained">
+        Get Started!
+      </Button>
+    </CardActions>
+  </Card>
+)
 
 export default () => {
-    const classes = useStyles()
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
-    return (
-        <Layout>
-            <SEO title="Legion Ops - Home" />
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={9}>
-                    <Paper className={fixedHeightPaper}>
-                        <Typography variant="h2">Coming Soon</Typography>
-                        <Typography variant="subtitle1">
-                            This is the future home of <em>Legion Ops</em>, a tool
-                            designed to assist with organizing league and tournament
-                            play for Star Wars Legion.
-                        </Typography>
-                    </Paper>
-                </Grid>
-
-                <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                        <Typography variant="h5">Events</Typography>
-                        ...
-                    </Paper>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <Typography variant="h5">Activity</Typography>
-                        ...
-                    </Paper>
-                </Grid>
+  return (
+    <Layout>
+      <SEO title="Legion Ops - Home" />
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8} lg={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Welcome />
             </Grid>
-        </Layout>
-    )
+
+            <Grid item xs={12}>
+              <EventsCard />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} md={4} lg={3}>
+          <ActivityCard />
+        </Grid>
+      </Grid>
+    </Layout>
+  )
 }

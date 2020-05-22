@@ -1,31 +1,31 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core"
 
 const primary = {
-    main: "#424242",
-    light: "#6d6d6d",
-    dark: "#1b1b1b"
-};
+  main: "#095",
+  light: "#33ad77",
+  dark: "#006b3b",
+}
 
 const secondary = {
-    main: "#9c27b0",
-    light: "#d05ce3",
-    dark: "#6a0080"
-};
+  main: "#904",
+  light: "#ad3369",
+  dark: "#6b002f",
+}
 
 const theme = createMuiTheme({
-    palette: {
-        type: "dark",
-        primary,
-        secondary
+  palette: {
+    type: "dark",
+    primary,
+    secondary,
+  },
+  overrides: {
+    MuiAvatar: {
+      colorDefault: {
+        backgroundColor: secondary.main,
+        color: "white",
+      },
     },
-    overrides: {
-        MuiAvatar: {
-            colorDefault: {
-                backgroundColor: secondary.main,
-                color: "white"
-            }
-        }
-    }
-});
+  },
+})
 
-export default theme;
+export default theme
