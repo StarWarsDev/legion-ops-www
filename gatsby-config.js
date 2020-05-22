@@ -9,7 +9,7 @@ module.exports = {
   siteMetadata: {
     title: `Legion Ops`,
     description: `Tournament and League play organizer for Star Wars Legion.`,
-    author: `The Fifth Trooper`
+    author: `Steve Good`,
   },
   plugins: [
     {
@@ -21,10 +21,10 @@ module.exports = {
         background_color: `#303030`,
         theme_color: `#303030`,
         display: `standalone`,
-        icon: `src/images/icon.png`
-      }
+        icon: `src/images/icon.png`,
+      },
     },
     `gatsby-plugin-offline`,
-    `gatsby-plugin-react-helmet`
+    `gatsby-plugin-react-helmet`,
   ],
 }
