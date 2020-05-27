@@ -143,7 +143,7 @@ export default function Header(props) {
 
           <div className={classes.loginWrapper}>
             {(!user || !isAuthed) && (
-              <Button color="inherit" href="#" onClick={() => login()}>
+              <Button color="inherit" onClick={() => login()}>
                 Login
               </Button>
             )}
