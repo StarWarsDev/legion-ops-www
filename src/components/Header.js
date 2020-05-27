@@ -1,55 +1,57 @@
-import React, { useState } from "react";
-import clsx from "clsx";
+import React, { useState } from "react"
+import clsx from "clsx"
+import { Link as GLink } from "gatsby"
 import {
   AppBar,
-    Avatar,
-    Button,
+  Avatar,
+  Button,
   Toolbar,
-  Typography,
   makeStyles,
   IconButton,
-  Drawer
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import {User} from "./model/app";
+  Drawer,
+  Link,
+} from "@material-ui/core"
+import MenuIcon from "@material-ui/icons/Menu"
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
+import { login, isAuthenticated, getProfile } from "../utils/auth"
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer is closed
+    paddingRight: 24, // keep right padding when drawer is closed
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    color: "white",
   },
   drawerPaper: {
     position: "relative",
@@ -57,38 +59,38 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9)
-    }
+      width: theme.spacing(9),
+    },
   },
   appBarSpacer: { ...theme.mixins.toolbar },
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   fixedHeight: {
-    height: 240
+    height: 240,
   },
   buttonProgress: {
     color: "white",
@@ -96,22 +98,24 @@ const useStyles = makeStyles(theme => ({
     top: "50%",
     left: "50%",
     marginTop: -12,
-    marginLeft: -12
+    marginLeft: -12,
   },
   loginWrapper: {
     margin: theme.spacing(1),
-    position: "relative"
+    position: "relative",
+  },
+}))
+
+export default function Header(props) {
+  const classes = useStyles()
+
+  const isAuthed = isAuthenticated()
+  let user
+  if (isAuthed) {
+    user = getProfile()
   }
-}));
 
-interface Props {
-  user: User;
-}
-
-export default function Header(props: Props) {
-  const classes = useStyles();
-  const { user } = props;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <>
       {/* AppBar */}
@@ -132,20 +136,24 @@ export default function Header(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>Legion Ops</Typography>
+
+          <Link variant="h6" className={classes.title} component={GLink} to="/">
+            Legion Ops
+          </Link>
+
           <div className={classes.loginWrapper}>
-            {!user.authenticated && (
-                <Button color="inherit" href="/login">
-                  Login
-                </Button>
+            {(!user || !isAuthed) && (
+              <Button color="inherit" href="#" onClick={() => login()}>
+                Login
+              </Button>
             )}
 
-            {user.authenticated && (
-                <React.Fragment>
-                  <IconButton size="small">
-                    <Avatar src={user.picture} />
-                  </IconButton>
-                </React.Fragment>
+            {user && isAuthed && (
+              <React.Fragment>
+                <IconButton size="small">
+                  <Avatar src={user.picture} />
+                </IconButton>
+              </React.Fragment>
             )}
           </div>
         </Toolbar>
@@ -155,7 +163,7 @@ export default function Header(props: Props) {
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
         open={open}
       >
@@ -166,5 +174,5 @@ export default function Header(props: Props) {
         </div>
       </Drawer>
     </>
-  );
+  )
 }
