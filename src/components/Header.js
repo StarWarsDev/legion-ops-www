@@ -6,7 +6,6 @@ import {
   Avatar,
   Button,
   Toolbar,
-  Typography,
   makeStyles,
   IconButton,
   Drawer,
