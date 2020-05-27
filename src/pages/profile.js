@@ -15,7 +15,6 @@ const Home = ({ user }) => {
     </>
   )
 }
-const Edit = () => <p>Editing My Profile</p>
 
 export default function Profile() {
   if (!isAuthenticated()) {
@@ -31,9 +30,6 @@ export default function Profile() {
         <Link component={GLink} to="/profile">
           My Profile
         </Link>{" "}
-        <Link component={GLink} to="/profile/edit">
-          Edit My Profile
-        </Link>{" "}
         <Link
           href="#"
           onClick={e => {
@@ -46,7 +42,6 @@ export default function Profile() {
       </nav>
       <Router>
         <Home path="/profile" user={user} />
-        <Edit path="/profile/edit" />
       </Router>
     </Layout>
   )
