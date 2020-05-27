@@ -150,7 +150,7 @@ export default function Header(props) {
 
             {user && isAuthed && (
               <React.Fragment>
-                <IconButton size="small">
+                <IconButton size="small" component={GLink} to="/profile">
                   <Avatar src={user.picture} />
                 </IconButton>
               </React.Fragment>
