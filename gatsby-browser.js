@@ -1,4 +1,7 @@
 import React from "react"
+import { ApolloProvider } from "@apollo/react-hooks"
+import ApolloClient from "apollo-boost"
+import fetch from "isomorphic-fetch"
 import { silentAuth } from "./src/utils/auth"
 
 class SessionCheck extends React.Component {
@@ -26,6 +29,15 @@ class SessionCheck extends React.Component {
   }
 }
 
+const client = new ApolloClient({
+  uri: "http://legion-ops.herokuapp.com/graphql",
+  fetch,
+})
+
 export const wrapRootElement = ({ element }) => {
-  return <SessionCheck>{element}</SessionCheck>
+  return (
+    <SessionCheck>
+      <ApolloProvider client={client}>{element}</ApolloProvider>
+    </SessionCheck>
+  )
 }
