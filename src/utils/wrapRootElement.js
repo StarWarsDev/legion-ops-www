@@ -30,7 +30,7 @@ class SessionCheck extends React.Component {
 }
 
 const client = new ApolloClient({
-  uri: "http://legion-ops.herokuapp.com/graphql",
+  uri: "https://legion-ops.herokuapp.com/graphql",
   fetch,
 })
 
