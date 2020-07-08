@@ -49,6 +49,7 @@ const setSession = (cb = () => {}) => (err, authResult) => {
     tokens.accessToken = authResult.accessToken
     tokens.idToken = authResult.idToken
     tokens.expiresAt = expiresAt
+    console.log(tokens)
     user = authResult.idTokenPayload
     localStorage.setItem("isLoggedIn", true)
     navigate("/profile")
