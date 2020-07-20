@@ -5,12 +5,10 @@ import {
   Home as HomeIcon,
   Settings as SettingsIcon,
   Info as InfoIcon,
-  ViewModule as CardsIcon,
-  Announcement as NewsIcon,
-  Casino as DiceIcon
 } from '@material-ui/icons';
+import Icon from '@mdi/react'
+import { mdiTournament } from '@mdi/js'
 import ErrorFallback from 'common/ErrorFallback';
-import FactionIcon from 'common/FactionIcon';
 import auth0Client from 'utility/Auth';
 import urls from 'constants/urls';
 import settings from 'constants/settings';
@@ -27,40 +25,10 @@ const routes = {
     path: '/',
     icon: <HomeIcon style={{ fontSize }} />
   },
-  '/news': {
-    name: 'News',
-    path: '/news',
-    icon: <NewsIcon style={{ fontSize }} />
-  },
-  '/cards': {
-    name: 'Cards',
-    path: '/cards',
-    icon: <CardsIcon style={{ fontSize }} />
-  },
-  '/roller': {
-    name: 'Dice Roller',
-    path: '/roller',
-    icon: <DiceIcon style={{ fontSize }} />
-  },
-  '/list/rebels': {
-    name: 'Rebels',
-    path: '/list/rebels',
-    icon: <FactionIcon faction="rebels" />
-  },
-  '/list/empire': {
-    name: 'Empire',
-    path: '/list/empire',
-    icon: <FactionIcon faction="empire" />
-  },
-  '/list/republic': {
-    name: 'Republic',
-    path: '/list/republic',
-    icon: <FactionIcon faction="republic" />
-  },
-  '/list/separatists': {
-    name: 'Separatists',
-    path: '/list/separatists',
-    icon: <FactionIcon faction="separatists" />
+  '/tournaments': {
+    name: 'Tournaments',
+    path: '/tournaments',
+    icon: <Icon path={mdiTournament} size={1} />
   },
   '/settings': {
     name: 'Settings',
@@ -93,6 +61,11 @@ export function DataProvider({ children }) {
   const [userId, setUserId] = useState();
   const [message, setMessage] = useState();
   const [userLists, setUserLists] = useState([]);
+  const [userEvents, setUserEvents] = useState({
+    tournament: [],
+    league: [],
+    other: []
+  });
   const [userSettings, setUserSettings] = useState(initializeLocalSettings());
 
   useEffect(() => {
@@ -109,7 +82,15 @@ export function DataProvider({ children }) {
 
   useEffect(() => {
     if (auth && auth.isAuthenticated() && !userId) {
-      fetchUserId(auth.getEmail());
+      fetchHQUserId(auth.getEmail());
+    }
+
+    if (auth && auth.isAuthenticated()) {
+      fetchUserEvents(auth)
+      const fetchEventsInterval = setInterval(() => {
+        fetchUserEvents(auth)
+      }, 5000)
+      return () => clearInterval(fetchEventsInterval)
     }
   }, [auth]);
 
@@ -124,9 +105,9 @@ export function DataProvider({ children }) {
         fetchUserLists(userId);
       } else if (auth && auth.isAuthenticated() && !userId) {
         console.log(`Logging in user with email: ${auth.getEmail()}`);
-        fetchUserId(auth.getEmail());
+        fetchHQUserId(auth.getEmail());
       }
-    }, 5000);
+    }, 60000);
     return () => clearInterval(intervalId);
   }, [userId, auth]);
 
@@ -141,6 +122,7 @@ export function DataProvider({ children }) {
     }
   }
   const goToPage = (newRoute) => history.push(newRoute);
+
   const fetchUserLists = (userId) => {
     if (userId) {
       httpClient.get(`${urls.api}/lists?userId=${userId}`)
@@ -152,17 +134,20 @@ export function DataProvider({ children }) {
         });
     } else setUserLists([]);
   }
-  const deleteUserList = (listId) => {
-    if (listId) {
-      httpClient.delete(`${urls.api}/lists/${listId}`)
-        .then(response => fetchUserLists(userId))
-        .catch(e => {
-          setError(e);
-          setMessage(`Failed to delete list ${listId} for user ${userId}`);
-        });
+
+  const fetchUserEvents = (auth) => {
+    if (auth && auth.isAuthenticated()) {
+      // TODO: call to get current user's events (pass auth.idToken)
+    } else {
+      setUserEvents({
+        tournament: [],
+        league: [],
+        other: []
+      })
     }
   }
-  const fetchUserId = (email) => {
+
+  const fetchHQUserId = (email) => {
     if (email) {
       httpClient.get(`${urls.api}/users?email=${email}`)
         .then(response => {
@@ -199,13 +184,15 @@ export function DataProvider({ children }) {
         userId,
         routes,
         userLists,
+        userEvents,
         userSettings,
         goToPage,
         fetchUserLists,
+        fetchUserEvents,
         setUserLists,
+        setUserEvents,
         setUserSettingsValue,
-        setIsDrawerOpen,
-        deleteUserList
+        setIsDrawerOpen
       }}
     >
       {children}

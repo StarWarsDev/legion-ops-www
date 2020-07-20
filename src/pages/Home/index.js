@@ -1,38 +1,28 @@
 import React, { useContext, useEffect } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import ErrorBoundary from 'react-error-boundary';
 import { Grid, Typography, Container, Fade } from '@material-ui/core';
 import LoginButton from './LoginButton';
-import ListChip from './ListChip';
-import FactionChip from './FactionChip';
 import DataContext from 'context/DataContext';
 import ErrorFallback from 'common/ErrorFallback';
-import factions from 'constants/factions';
 import ftLogoLight from 'assets/ftLogoLight.png';
 import ftLogoDark from 'assets/ftLogoDark.png';
 import lhqLogoLight from 'assets/lhqLogoLight.png';
 import lhqLogoDark from 'assets/lhqLogoDark.png';
+// TODO: import legion ops logo
+// import lopsLogoLight from 'assets/lopsLogoLight.png';
+// import lopsLogoDark from 'assets/lopsLogoDark.png';
 
 function Home() {
   const {
     auth,
-    userId,
-    userLists,
     userSettings,
-    fetchUserLists,
-    deleteUserList
+    fetchUserEvents
   } = useContext(DataContext);
-  const listChips = {};
-  Object.keys(factions).forEach(faction => listChips[faction] = []);
-  if (userLists) {
-    userLists.forEach(userList => {
-      if (userList.faction in listChips) {
-        listChips[userList.faction].push(userList);
-      }
-    });
-  }
+
   useEffect(() => {
-    if (userId) fetchUserLists(userId);
-  }, [userId]);
+    if (auth) fetchUserEvents(auth)
+  }, [auth])
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Fade in={true}>
@@ -61,32 +51,12 @@ function Home() {
             </Grid>
             <Grid item style={{ maxWidth: '75vw', textAlign: 'center' }}>
               <Typography variant="subtitle1">
-                An unofficial list building tool and resource for Fantasy Flight Games: Star Wars: Legion.
+                An unofficial tool for organizing tournaments, and leagues for Fantasy Flight Games: Star Wars: Legion.
               </Typography>
             </Grid>
             <Grid item>
               <div style={{ height: 10 }} />
             </Grid>
-            {Object.keys(factions).map(faction => (
-              <Grid
-                key={faction}
-                item
-                container
-                spacing={1}
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-                <Grid item key="factionChip">
-                  <FactionChip faction={faction} />
-                </Grid>
-                {listChips[faction].map(userList => (
-                  <Grid item key={userList.listId}>
-                    <ListChip userList={userList} deleteUserList={deleteUserList} />
-                  </Grid>
-                ))}
-              </Grid>
-            ))}
             <Grid item>
               <div style={{ height: 10 }} />
             </Grid>

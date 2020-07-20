@@ -27,7 +27,6 @@ function NavigationDrawer() {
   const {
     isDrawerOpen,
     routes,
-    faction,
     goToPage,
     setIsDrawerOpen
   } = useContext(DataContext);
@@ -53,72 +52,18 @@ function NavigationDrawer() {
               goToPage('/');
             }}
           />
-          {/*<NavDrawerLink*/}
-          {/*  text="News"*/}
-          {/*  selected={pathname === '/news'}*/}
-          {/*  icon={routes['/news'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/news');*/}
-          {/*  }}*/}
-          {/*/>*/}
-          {/*<NavDrawerLink*/}
-          {/*  text="Cards"*/}
-          {/*  selected={pathname === '/cards'}*/}
-          {/*  icon={routes['/cards'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/cards');*/}
-          {/*  }}*/}
-          {/*/>*/}
-          {/*<NavDrawerLink*/}
-          {/*  text="Dice Roller"*/}
-          {/*  selected={pathname === '/roller'}*/}
-          {/*  icon={routes['/roller'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/roller');*/}
-          {/*  }}*/}
-          {/*/>*/}
         </List>
         <Divider />
         <List dense={true}>
           <NavDrawerLink
             text="Tournaments"
-            selected={pathname === '/events/ffgop' || faction === 'ffgop'}
-            icon={routes['/list/rebels'].icon}
+            selected={pathname === '/tournaments'}
+            icon={routes['/tournaments'].icon}
             handleClick={() => {
               setIsDrawerOpen(false);
-              goToPage('/events/ffgop');
+              goToPage('/tournaments');
             }}
           />
-          {/*<NavDrawerLink*/}
-          {/*  text="Empire"*/}
-          {/*  selected={pathname === '/list/empire' || faction === 'empire'}*/}
-          {/*  icon={routes['/list/empire'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/list/empire');*/}
-          {/*  }}*/}
-          {/*/>*/}
-          {/*<NavDrawerLink*/}
-          {/*  text="Republic"*/}
-          {/*  selected={pathname === '/list/republic' || faction === 'republic'}*/}
-          {/*  icon={routes['/list/republic'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/list/republic');*/}
-          {/*  }}*/}
-          {/*/>*/}
-          {/*<NavDrawerLink*/}
-          {/*  text="Separatists"*/}
-          {/*  selected={pathname === '/list/separatists' || faction === 'separatists'}*/}
-          {/*  icon={routes['/list/separatists'].icon}*/}
-          {/*  handleClick={() => {*/}
-          {/*    setIsDrawerOpen(false);*/}
-          {/*    goToPage('/list/separatists');*/}
-          {/*  }}*/}
-          {/*/>*/}
         </List>
         <Divider />
         <List dense={true}>

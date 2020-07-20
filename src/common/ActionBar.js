@@ -3,8 +3,8 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase
-} from '@material-ui/core';
+  InputBase, Link as MUILink
+} from "@material-ui/core";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
 import DataContext from 'context/DataContext';
@@ -12,6 +12,7 @@ import ftLogoLight from 'assets/ftLogoLight.png';
 import ftLogoDark from 'assets/ftLogoDark.png';
 import lhqLogoLight from 'assets/lhqLogoLight.png';
 import lhqLogoDark from 'assets/lhqLogoDark.png';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   grow: { flexGrow: 1 },
@@ -75,11 +76,13 @@ function DefaultBar() {
       >
         <MenuIcon />
       </IconButton>
-      <img
-        alt="Legion Ops Logo"
-        src={userSettings.themeColor === 'light' ? lhqLogoLight : lhqLogoDark}
-        style={{ height: 35 }}
-      />
+      <MUILink component={Link} to="/">
+        <img
+          alt="Legion Ops Logo"
+          src={userSettings.themeColor === 'light' ? lhqLogoLight : lhqLogoDark}
+          style={{ height: 35 }}
+        />
+      </MUILink>
       <div className={classes.grow} />
       <a
         target="_blank"
