@@ -1,27 +1,19 @@
 const auth0URL = "legion-ops.auth0.com"
 
 const auth = {
-  v1: {
+  all: {
     domain: auth0URL,
-    audience: 'https://dev-i-uenm-b.auth0.com/userinfo',
-    clientID: 'lD7NO1LrFyHlaMY0oHQoCb7s6MblhVrl'
-  },
-  v2: {
-    domain: 'legion-hq-login.auth0.com',
-    audience: 'https://legion-hq-login.auth0.com/userinfo',
-    clientID: '4LIptO8NBFnPepfS8mxVxjFRNUljZHmZ'
+    audience: `https://${auth0URL}/userinfo`
   },
   dev: {
+    clientID: '54C97ABCWAyyO5qQVVpUkiXEvRkS3QBW',
     redirectUri: 'http://localhost:3000/callback',
     returnTo: 'http://localhost:3000'
   },
-  staging: {
-    redirectUri: 'https://d37xhki8rk4762.cloudfront.net/callback',
-    returnTo: 'https://d37xhki8rk4762.cloudfront.net'
-  },
   prod: {
-    redirectUri: 'https://legionhq.thefifthtrooper.com/callback',
-    returnTo: 'https://legionhq.thefifthtrooper.com'
+    clientID: 'TvCKJz3LDnVpy6B0SuzOSP4HFIQ04XJv',
+    redirectUri: 'https://legion-ops.com/callback',
+    returnTo: 'https://legion-ops.com'
   }
 };
 

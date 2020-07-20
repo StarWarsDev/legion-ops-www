@@ -1,8 +1,9 @@
 import auth0 from 'auth0-js';
 import auth from 'constants/auth';
 
-const { returnTo, redirectUri } = auth.prod;
-const { domain, audience, clientID } = auth.v1;
+const env = process.env.NODE_ENV === "production" ? "prod" : "dev"
+const { clientID, returnTo, redirectUri } = auth[env];
+const { domain, audience } = auth.all;
 
 class Auth {
   constructor() {
