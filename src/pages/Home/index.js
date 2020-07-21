@@ -6,7 +6,6 @@ import DataContext from 'context/DataContext';
 import ErrorFallback from 'common/ErrorFallback';
 import ftLogoLight from 'assets/ftLogoLight.png';
 import ftLogoDark from 'assets/ftLogoDark.png';
-// TODO: import legion ops logo
 import lopsLogoLight from 'assets/Legion-Ops.png';
 import lopsLogoDark from 'assets/Legion-Ops-White.png';
 
@@ -19,7 +18,7 @@ function Home() {
 
   useEffect(() => {
     if (auth) fetchUserEvents(auth)
-  }, [auth])
+  }, [auth, fetchUserEvents])
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

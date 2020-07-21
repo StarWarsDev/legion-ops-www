@@ -79,7 +79,7 @@ export function DataProvider({ children }) {
     }
     asyncSilentAuth();
   }, []);
-
+  
   useEffect(() => {
     if (auth && auth.isAuthenticated() && !userId) {
       fetchHQUserId(auth.getEmail());
@@ -92,6 +92,7 @@ export function DataProvider({ children }) {
       }, 5000)
       return () => clearInterval(fetchEventsInterval)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   useEffect(() => {
