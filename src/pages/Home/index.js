@@ -18,7 +18,8 @@ function Home() {
 
   useEffect(() => {
     if (auth) fetchUserEvents(auth)
-  }, [auth, fetchUserEvents])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth])
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
