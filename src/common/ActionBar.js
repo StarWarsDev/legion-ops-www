@@ -10,8 +10,8 @@ import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
 import DataContext from 'context/DataContext';
 import ftLogoLight from 'assets/ftLogoLight.png';
 import ftLogoDark from 'assets/ftLogoDark.png';
-import lhqLogoLight from 'assets/lhqLogoLight.png';
-import lhqLogoDark from 'assets/lhqLogoDark.png';
+import lopsLogoLight from 'assets/Legion-Ops.png';
+import lopsLogoDark from 'assets/Legion-Ops-White.png';
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -79,7 +79,7 @@ function DefaultBar() {
       <MUILink component={Link} to="/">
         <img
           alt="Legion Ops Logo"
-          src={userSettings.themeColor === 'light' ? lhqLogoLight : lhqLogoDark}
+          src={userSettings.themeColor === 'light' ? lopsLogoLight : lopsLogoDark}
           style={{ height: 35 }}
         />
       </MUILink>

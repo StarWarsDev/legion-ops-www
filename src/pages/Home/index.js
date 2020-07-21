@@ -6,11 +6,9 @@ import DataContext from 'context/DataContext';
 import ErrorFallback from 'common/ErrorFallback';
 import ftLogoLight from 'assets/ftLogoLight.png';
 import ftLogoDark from 'assets/ftLogoDark.png';
-import lhqLogoLight from 'assets/lhqLogoLight.png';
-import lhqLogoDark from 'assets/lhqLogoDark.png';
 // TODO: import legion ops logo
-// import lopsLogoLight from 'assets/lopsLogoLight.png';
-// import lopsLogoDark from 'assets/lopsLogoDark.png';
+import lopsLogoLight from 'assets/Legion-Ops.png';
+import lopsLogoDark from 'assets/Legion-Ops-White.png';
 
 function Home() {
   const {
@@ -45,7 +43,7 @@ function Home() {
             <Grid item>
               <img
                 alt="Legion Ops Logo"
-                src={userSettings.themeColor === 'light' ? lhqLogoLight : lhqLogoDark}
+                src={userSettings.themeColor === 'light' ? lopsLogoLight : lopsLogoDark}
                 style={{ width: 400, height: 'auto' }}
               />
             </Grid>
