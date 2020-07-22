@@ -13,42 +13,45 @@ import { compareDateStrings, fmtMonth, fmtYear, parseDate } from "../../utility/
 import { EventListItem } from "../../common/Event";
 import LoadingWidget from "../../common/LoadingWidget";
 
+const ALL_EVENTS_QUERY = gql`
+    query AllEvents {
+        events {
+            id
+            createdAt
+            updatedAt
+            name
+            type
+            organizer {
+                id
+                name
+                picture
+            }
+            headJudge {
+                id
+                name
+                picture
+            }
+            judges {
+                id
+                name
+                picture
+            }
+            players {
+                id
+            }
+            days {
+                id
+                startAt
+                endAt
+            }
+        }
+    }
+`
 
 function Tournaments() {
-  const { loading, error, data } = useQuery(gql`
-      query AllEvents {
-          events {
-              id
-              createdAt
-              updatedAt
-              name
-              type
-              organizer {
-                  id
-                  name
-                  picture
-              }
-              headJudge {
-                  id
-                  name
-                  picture
-              }
-              judges {
-                  id
-                  name
-                  picture
-              }
-              players {
-                  id
-              }
-              days {
-                  id
-                  startAt
-                  endAt
-              }
-          }
-      }
-  `)
+  const { loading, error, data } = useQuery(ALL_EVENTS_QUERY, {
+    pollInterval: 5000,
+  })
 
   if (loading) {
     return <LoadingWidget />
@@ -57,6 +60,10 @@ function Tournaments() {
   if (error) {
     return <div>{error.message}</div>
   }
+
+  const events = data.events
+    .filter(event => event.type === "FFGOP" && event.days.length > 0)
+    .sort((a, b) => compareDateStrings(a.days[0].startAt, b.days[0].startAt))
 
   let curMonth = ""
   return (
@@ -70,7 +77,7 @@ function Tournaments() {
 
           <Grid item xs={12}>
             <List>
-              {data.events.filter(event => event.type === "FFGOP").sort(compareDateStrings).map(event => {
+              {events.map(event => {
                 const startDate = parseDate(event.days[0].startAt)
                 const month = fmtMonth(startDate)
                 const year = fmtYear(startDate)
