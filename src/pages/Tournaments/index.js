@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
+import { gql, useQuery } from "@apollo/client";
 import {
   Container,
   Divider,
@@ -8,12 +9,55 @@ import {
   ListItemText,
   Typography
 } from "@material-ui/core"
-import DataContext from "../../context/DataContext";
 import { compareDateStrings, fmtMonth, fmtYear, parseDate } from "../../utility/time";
 import { EventListItem } from "../../common/Event";
+import LoadingWidget from "../../common/LoadingWidget";
+
 
 function Tournaments() {
-  const { events } = useContext(DataContext)
+  const { loading, error, data } = useQuery(gql`
+      query AllEvents {
+          events {
+              id
+              createdAt
+              updatedAt
+              name
+              type
+              organizer {
+                  id
+                  name
+                  picture
+              }
+              headJudge {
+                  id
+                  name
+                  picture
+              }
+              judges {
+                  id
+                  name
+                  picture
+              }
+              players {
+                  id
+              }
+              days {
+                  id
+                  startAt
+                  endAt
+              }
+          }
+      }
+  `)
+
+  if (loading) {
+    return <LoadingWidget />
+  }
+
+  if (error) {
+    return <div>{error.message}</div>
+  }
+
   let curMonth = ""
   return (
     <div>
@@ -26,7 +70,7 @@ function Tournaments() {
 
           <Grid item xs={12}>
             <List>
-              {events.tournament.sort(compareDateStrings).map(event => {
+              {data.events.filter(event => event.type === "FFGOP").sort(compareDateStrings).map(event => {
                 const startDate = parseDate(event.days[0].startAt)
                 const month = fmtMonth(startDate)
                 const year = fmtYear(startDate)

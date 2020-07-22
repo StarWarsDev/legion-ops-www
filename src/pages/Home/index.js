@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import ErrorBoundary from 'react-error-boundary';
 import { Grid, Typography, Container, Fade } from '@material-ui/core';
 import LoginButton from './LoginButton';
@@ -12,14 +12,8 @@ import lopsLogoDark from 'assets/Legion-Ops-White.png';
 function Home() {
   const {
     auth,
-    userSettings,
-    fetchUserEvents
+    userSettings
   } = useContext(DataContext);
-
-  useEffect(() => {
-    if (auth) fetchUserEvents(auth)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth])
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

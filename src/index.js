@@ -4,13 +4,22 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { DataProvider } from 'context/DataContext';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import urls from "./constants/urls";
+
+const client = new ApolloClient({
+  uri: urls.api,
+  cache: new InMemoryCache()
+})
 
 ReactDOM.render(
-  <Router>
-    <DataProvider>
-      <App />
-    </DataProvider>
-  </Router>,
+  <ApolloProvider client={client}>
+    <Router>
+      <DataProvider>
+        <App />
+      </DataProvider>
+    </Router>
+  </ApolloProvider>,
   document.getElementById('root')
 );
 
