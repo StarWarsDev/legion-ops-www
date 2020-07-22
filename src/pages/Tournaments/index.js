@@ -16,7 +16,7 @@ import ErrorFallback from "../../common/ErrorFallback";
 
 const ALL_EVENTS_QUERY = gql`
     query AllEvents {
-        events {
+        events(eventType: FFGOP) {
             id
             createdAt
             updatedAt
