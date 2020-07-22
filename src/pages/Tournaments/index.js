@@ -12,6 +12,7 @@ import {
 import { compareDateStrings, fmtMonth, fmtYear, parseDate } from "../../utility/time";
 import { EventListItem } from "../../common/Event";
 import LoadingWidget from "../../common/LoadingWidget";
+import ErrorFallback from "../../common/ErrorFallback";
 
 const ALL_EVENTS_QUERY = gql`
     query AllEvents {
@@ -58,7 +59,7 @@ function Tournaments() {
   }
 
   if (error) {
-    return <div>{error.message}</div>
+    return <ErrorFallback error={error} message={error.message} />
   }
 
   const events = data.events
