@@ -15,8 +15,8 @@ import LoadingWidget from "../../common/LoadingWidget";
 import ErrorFallback from "../../common/ErrorFallback";
 
 const ALL_EVENTS_QUERY = gql`
-    query AllEvents {
-        events(eventType: FFGOP) {
+    query AllEvents($eventType: EventType, $startsAfter: Date, $endsBefore: Date) {
+        events(eventType: $eventType, startsAfter: $startsAfter, endsBefore: $endsBefore) {
             id
             createdAt
             updatedAt
@@ -49,9 +49,22 @@ const ALL_EVENTS_QUERY = gql`
     }
 `
 
+const now = new Date()
+
 function Tournaments() {
+  const startsAfter = new Date(now)
+  startsAfter.setDate(startsAfter.getDate() - 15)
+
+  const endsBefore = new Date(now)
+  endsBefore.setDate(endsBefore.getDate() + 180)
+
   const { loading, error, data } = useQuery(ALL_EVENTS_QUERY, {
     pollInterval: 60000,
+    variables: {
+      eventType: "FFGOP",
+      startsAfter: startsAfter.toISOString(),
+      endsBefore: endsBefore.toISOString()
+    }
   })
 
   if (loading) {
