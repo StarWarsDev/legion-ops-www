@@ -16,7 +16,7 @@ function LoginButton({ auth }) {
   } else {
     disabled = false;
     buttonText = 'Login';
-    tooltipText = 'Login via Google.';
+    tooltipText = 'Login via Google or Facebook.';
     handleClick = auth.signIn;
   }
   return (
