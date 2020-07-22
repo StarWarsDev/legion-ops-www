@@ -1,17 +1,16 @@
-const auth0URL = "legion-ops.auth0.com"
+const auth0URL = "dev-i-uenm-b.auth0.com"
 
 const auth = {
-  all: {
+  v1: {
     domain: auth0URL,
+    clientID: 'lD7NO1LrFyHlaMY0oHQoCb7s6MblhVrl',
     audience: `https://${auth0URL}/userinfo`
   },
   dev: {
-    clientID: '54C97ABCWAyyO5qQVVpUkiXEvRkS3QBW',
     redirectUri: 'http://localhost:3000/callback',
     returnTo: 'http://localhost:3000'
   },
   prod: {
-    clientID: 'TvCKJz3LDnVpy6B0SuzOSP4HFIQ04XJv',
     redirectUri: 'https://legion-ops.com/callback',
     returnTo: 'https://legion-ops.com'
   }
