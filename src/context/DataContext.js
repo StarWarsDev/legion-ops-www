@@ -12,6 +12,7 @@ import ErrorFallback from 'common/ErrorFallback';
 import auth0Client from 'utility/Auth';
 import urls from 'constants/urls';
 import settings from 'constants/settings';
+import { queryEvents, queryMyEvents } from "../api";
 
 const DataContext = createContext();
 const httpClient = Axios.create();
@@ -53,6 +54,12 @@ function initializeLocalSettings() {
   return settings.default;
 }
 
+const eventsInitialState = {
+  tournament: [],
+  league: [],
+  other: []
+};
+
 export function DataProvider({ children }) {
   const history = useHistory();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -61,11 +68,8 @@ export function DataProvider({ children }) {
   const [userId, setUserId] = useState();
   const [message, setMessage] = useState();
   const [userLists, setUserLists] = useState([]);
-  const [userEvents, setUserEvents] = useState({
-    tournament: [],
-    league: [],
-    other: []
-  });
+  const [events, setEvents] = useState(eventsInitialState);
+  const [userEvents, setUserEvents] = useState(eventsInitialState);
   const [userSettings, setUserSettings] = useState(initializeLocalSettings());
 
   useEffect(() => {
@@ -77,7 +81,9 @@ export function DataProvider({ children }) {
         setAuth(auth0Client);
       }
     }
-    asyncSilentAuth();
+    asyncSilentAuth()
+
+    fetchEvents()
   }, []);
   
   useEffect(() => {
@@ -136,6 +142,34 @@ export function DataProvider({ children }) {
     } else setUserLists([]);
   }
 
+  const fetchEvents = async () => {
+    const events = {
+      tournament: [],
+      league: [],
+      other: []
+    }
+
+    const queriedEvents = await queryEvents()
+
+    queriedEvents.map(event => {
+      switch (event.type) {
+        case "FFGOP":
+          events.tournament.push(event)
+          break
+        case "LEAGUE":
+          events.league.push(event)
+          break
+        case "OTHER":
+          events.other.push(event)
+          break
+        default:
+          console.log("what even is this type?", event.id, event.type)
+      }
+    })
+
+    setEvents(events)
+  }
+
   const fetchUserEvents = (auth) => {
     if (auth && auth.isAuthenticated()) {
       // TODO: call to get current user's events (pass auth.idToken)
@@ -184,6 +218,7 @@ export function DataProvider({ children }) {
         auth,
         userId,
         routes,
+        events,
         userLists,
         userEvents,
         userSettings,
