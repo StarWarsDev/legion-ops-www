@@ -51,7 +51,7 @@ const ALL_EVENTS_QUERY = gql`
 
 function Tournaments() {
   const { loading, error, data } = useQuery(ALL_EVENTS_QUERY, {
-    pollInterval: 5000,
+    pollInterval: 60000,
   })
 
   if (loading) {
