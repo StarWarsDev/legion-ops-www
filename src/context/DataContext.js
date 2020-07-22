@@ -12,7 +12,7 @@ import ErrorFallback from 'common/ErrorFallback';
 import auth0Client from 'utility/Auth';
 import urls from 'constants/urls';
 import settings from 'constants/settings';
-import { queryEvents, queryMyEvents } from "../api";
+import { queryEvents } from "../api";
 
 const DataContext = createContext();
 const httpClient = Axios.create();
@@ -151,7 +151,7 @@ export function DataProvider({ children }) {
 
     const queriedEvents = await queryEvents()
 
-    queriedEvents.map(event => {
+    queriedEvents.forEach(event => {
       switch (event.type) {
         case "FFGOP":
           events.tournament.push(event)
