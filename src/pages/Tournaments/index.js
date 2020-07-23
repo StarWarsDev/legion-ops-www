@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client";
 import {
   Container,
@@ -26,6 +27,7 @@ const ALL_EVENTS_QUERY = gql`
             createdAt
             updatedAt
             name
+            description
             type
             organizer {
                 id
@@ -58,6 +60,7 @@ const now = new Date()
 
 function Tournaments() {
   const { auth } = useContext(DataContext);
+  const history = useHistory()
   const [open, setOpen] = useState(false)
 
   if (auth && !auth.isAuthenticated()) {
@@ -91,6 +94,16 @@ function Tournaments() {
     .filter(event => event.type === "FFGOP" && event.days.length > 0)
     .sort((a, b) => compareDateStrings(a.days[0].startAt, b.days[0].startAt))
 
+  const navigateToEvent = (id) => {
+    history.push(`/event/${id}`)
+  }
+
+  const handleSaved = (event) => {
+    console.log(event)
+    setOpen(false)
+    navigateToEvent(event.id)
+  }
+
   let curMonth = ""
   return (
     <div>
@@ -112,7 +125,13 @@ function Tournaments() {
                     <AddIcon />
                   </IconButton>
                 </LargerTooltip>
-                <CreateEventModal auth={auth} title="Create a Tournament" open={open} onClose={() => setOpen(false)} />
+                <CreateEventModal
+                  auth={auth}
+                  title="Create a Tournament"
+                  eventType="FFGOP"
+                  open={open}
+                  onSaved={handleSaved}
+                  onCancel={() => setOpen(false)} />
               </Grid>
             </Grid>
             <Divider />
@@ -137,7 +156,7 @@ function Tournaments() {
                         <ListItemText primary={fmtMonthYear} />
                       </ListItem>
                     )}
-                    <EventListItem event={event} />
+                    <EventListItem event={event} onClick={() => navigateToEvent(event.id)} />
                   </React.Fragment>
                 )
               })}

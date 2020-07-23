@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Divider,
   Grid,
+  IconButton,
   Modal,
   Paper,
   TextField,
   Typography
 } from "@material-ui/core";
-import {
-  KeyboardDateTimePicker
-} from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
+import CancelIcon from "@material-ui/icons/Cancel"
+import SaveIcon from "@material-ui/icons/Save"
+import { gql, useMutation } from "@apollo/client";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -29,16 +30,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function CreateEventModal({ auth, title, open, onClose }) {
+const CREATE_EVENT = gql`
+    mutation CreateEvent($input: EventInput!) {
+        createEvent(input: $input) {
+            id
+        }
+    }
+`
+
+export default function CreateEventModal({ auth, title, eventType, open, onSaved, onCancel }) {
+  const [createEvent] = useMutation(CREATE_EVENT)
   const classes = useStyles();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date(new Date().setHours(startDate.getHours() + 8)));
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+
+  // when the open prop changes, clear the state
+  useEffect(() => {
+    setName("")
+    setDescription("")
+  }, [open])
 
   const organizerName = auth && auth.isAuthenticated() && auth.getProfile() ? auth.getProfile().name : "";
 
-  return (
+  const handleSaveClick = () => {
+    const eventInput = {
+      name,
+      description,
+      type: eventType
+    }
 
-    <Modal open={open} className={classes.modal} onClose={onClose}>
+    createEvent({
+      variables: {
+        input: eventInput
+      }
+    })
+      .then(({data: {createEvent}}) => onSaved(createEvent))
+      .catch(err => console.error(err))
+  }
+
+  return (
+    <Modal open={open} className={classes.modal}>
       <Container>
         <Paper className={classes.paper}>
           <Grid container direction="column" spacing={3}>
@@ -50,46 +81,44 @@ export default function CreateEventModal({ auth, title, open, onClose }) {
             <form noValidate autoComplete="off">
               <Grid item xs={12}>
                 <Grid container direction="row" spacing={3}>
-                  <Grid item xs={2}>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="t-name"
+                      label="Tournament Name"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      fullWidth/>
+                  </Grid>
+
+                  <Grid item xs={3}>
                     <TextField id="o-name" label="Organizer" fullWidth value={organizerName} disabled/>
-                  </Grid>
-
-                  <Grid item xs={4}>
-                    <TextField id="t-name" label="Tournament Name" fullWidth/>
-                  </Grid>
-
-                  <Grid item xs={3}>
-                    <KeyboardDateTimePicker
-                      format="yyyy-MM-dd h:mm a"
-                      fullWidth
-                      id="start-date-picker"
-                      label="Start Date / Time"
-                      value={startDate}
-                      onChange={date => setStartDate(date)}
-                      KeyboardButtonProps={{
-                        "aria-label": "change start date"
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={3}>
-                    <KeyboardDateTimePicker
-                      format="yyyy-MM-dd h:mm a"
-                      fullWidth
-                      id="end-date-picker"
-                      label="End Date / Time"
-                      value={endDate}
-                      onChange={date => setEndDate(date)}
-                      KeyboardButtonProps={{
-                        "aria-label": "change end date"
-                      }}
-                    />
                   </Grid>
                 </Grid>
               </Grid>
 
               <Grid item xs={12}>
-                <TextField multiline id="e-description" label="Description" fullWidth rows={10} />
+                <TextField
+                  multiline
+                  id="e-description"
+                  label="Description"
+                  fullWidth
+                  rows={10}
+                  value={description}
+                  onChange={e => setDescription(e.target.value)} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Grid container direction="row" spacing={3} justify="flex-end" alignItems="center">
+                  <Grid item>
+                    <IconButton onClick={handleSaveClick}>
+                      <SaveIcon />
+                    </IconButton>
+
+                    <IconButton onClick={onCancel}>
+                      <CancelIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </Grid>
             </form>
           </Grid>

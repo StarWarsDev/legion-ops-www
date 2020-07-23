@@ -9,7 +9,7 @@ import { fmtDay, parseDate } from "../utility/time";
 import { fmtEventType } from "../utility/strings";
 
 
-export function EventListItem({ event }) {
+export function EventListItem({ event, onClick }) {
   const startDate = parseDate(event.days[0].startAt)
   let secondaryLines = []
   secondaryLines.push(
@@ -19,7 +19,7 @@ export function EventListItem({ event }) {
   secondaryLines.push(`Organizer: ${event.organizer.name}`)
   secondaryLines.push(`${event.players.length} registered players`)
   return (
-    <ListItem alignItems="flex-start" button>
+    <ListItem alignItems="flex-start" button onClick={onClick}>
       <ListItemAvatar>
         <Avatar>{fmtDay(startDate)}</Avatar>
       </ListItemAvatar>

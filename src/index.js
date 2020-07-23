@@ -8,23 +8,14 @@ import {
 import { DataProvider } from 'context/DataContext';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import urls from "./constants/urls";
-
-const client = new ApolloClient({
-  uri: urls.graphql,
-  cache: new InMemoryCache()
-})
 
 ReactDOM.render(
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    <ApolloProvider client={client}>
-      <Router>
-        <DataProvider>
-          <App />
-        </DataProvider>
-      </Router>
-    </ApolloProvider>
+    <Router>
+      <DataProvider>
+        <App />
+      </DataProvider>
+    </Router>
   </MuiPickersUtilsProvider>,
   document.getElementById('root')
 );
