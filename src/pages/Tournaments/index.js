@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import {
   Container,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemText,
   Typography
 } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
 import { compareDateStrings, fmtMonth, fmtYear, parseDate } from "../../utility/time";
 import { EventListItem } from "../../common/Event";
 import LoadingWidget from "../../common/LoadingWidget";
 import ErrorFallback from "../../common/ErrorFallback";
+import LargerTooltip from "../../common/LargerTooltip";
+import DataContext from "../../context/DataContext";
+import CreateEventModal from "../../common/CreateEventModal";
 
 const ALL_EVENTS_QUERY = gql`
     query AllEvents($eventType: EventType, $startsAfter: Date, $endsBefore: Date) {
@@ -52,6 +57,13 @@ const ALL_EVENTS_QUERY = gql`
 const now = new Date()
 
 function Tournaments() {
+  const { auth } = useContext(DataContext);
+  const [open, setOpen] = useState(false)
+
+  if (auth && !auth.isAuthenticated()) {
+    auth.silentAuth()
+  }
+
   const startsAfter = new Date(now)
   startsAfter.setDate(startsAfter.getDate() - 15)
 
@@ -83,13 +95,30 @@ function Tournaments() {
   return (
     <div>
       <Container>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h3" component="h3">Tournaments</Typography>
+        <Grid container direction="column" justify="space-around">
+          <Grid item>
+            <Grid container direction="row" justify="space-between" alignItems="center">
+              <Grid item xs={11}>
+                <Typography variant="h3" component="h1">Tournaments</Typography>
+              </Grid>
+              <Grid item>
+                <LargerTooltip arrow title="Create a tournament">
+                  <IconButton
+                    color="primary"
+                    aria-label="create a tournament"
+                    disabled={!auth || !auth.isAuthenticated()}
+                    onClick={() => setOpen(true)}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </LargerTooltip>
+                <CreateEventModal auth={auth} title="Create a Tournament" open={open} onClose={() => setOpen(false)} />
+              </Grid>
+            </Grid>
             <Divider />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item>
             <List>
               {events.map(event => {
                 const startDate = parseDate(event.days[0].startAt)
