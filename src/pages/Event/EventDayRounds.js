@@ -9,7 +9,7 @@ export default function EventDayRounds({ rounds }) {
   )
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={5}>
       {sortedRounds.map((round, i) => (
         <Grid item key={round.id}>
           <Typography

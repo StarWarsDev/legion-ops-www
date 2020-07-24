@@ -47,6 +47,8 @@ const EVENT_QUERY = gql`
           counter
           matches {
             id
+            createdAt
+            updatedAt
             player1 {
               id
               name

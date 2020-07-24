@@ -40,10 +40,20 @@ const useStyles = makeStyles(theme => {
     byeMedia: {
       opacity: 0.5,
     },
+    blueMedia: {
+      border: "2px solid #3c6dcf",
+    },
   }
 })
 
-export default function UserCard({ user, victoryPoints, mov, winner, bye }) {
+export default function UserCard({
+  user,
+  blue,
+  victoryPoints,
+  mov,
+  winner,
+  bye,
+}) {
   const classes = useStyles()
   const root =
     winner && winner.id === user.id
@@ -52,10 +62,14 @@ export default function UserCard({ user, victoryPoints, mov, winner, bye }) {
       ? clsx(classes.root, classes.bye)
       : classes.root
 
-  const media =
+  let media =
     bye && bye.id !== user.id
       ? clsx(classes.cover, classes.byeMedia)
       : classes.cover
+
+  if (blue && blue.id === user.id) {
+    media = clsx(media, classes.blueMedia)
+  }
   return (
     <Card
       className={root}
