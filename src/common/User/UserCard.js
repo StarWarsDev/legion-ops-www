@@ -8,7 +8,6 @@ const height = 55
 const width = 55
 
 const useStyles = makeStyles(theme => {
-  console.log(theme.palette)
   return {
     root: {
       display: "flex",

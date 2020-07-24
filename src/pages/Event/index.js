@@ -1,13 +1,16 @@
 import React from "react"
+import { useHistory } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
-import { Container, Grid, Typography } from "@material-ui/core"
+import { Container, IconButton, Grid, Typography } from "@material-ui/core"
+import EditIcon from "@material-ui/icons/Edit"
 import LoadingWidget from "../../common/LoadingWidget"
 import ErrorFallback from "../../common/ErrorFallback"
 import EventSideBar from "./EventSideBar"
 import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
+import EditButton from "./EditButton"
 
-const EVENT_QUERY = gql`
+export const EVENT_QUERY = gql`
   query Event($id: ID!) {
     event(id: $id) {
       id
@@ -86,10 +89,12 @@ const EVENT_QUERY = gql`
 `
 
 export default function Event({ match: { params } }) {
+  const history = useHistory()
   const { loading, data, error } = useQuery(EVENT_QUERY, {
     variables: {
       id: params.id,
     },
+    pollInterval: 15000,
   })
 
   if (loading) {
@@ -104,9 +109,25 @@ export default function Event({ match: { params } }) {
 
   return (
     <Container>
-      <Typography variant="h2" component="h1">
-        {event.name}
-      </Typography>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={11}>
+          <Typography variant="h2" component="h1">
+            {event.name}
+          </Typography>
+        </Grid>
+
+        <Grid item>
+          <EditButton
+            eventId={params.id}
+            onClick={() => history.push(`/event/${params.id}/edit`)}
+          />
+        </Grid>
+      </Grid>
 
       <Grid container spacing={3} direction="row">
         <Grid item xs={9}>
