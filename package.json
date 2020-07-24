@@ -18,7 +18,7 @@
     "auth0-js": "^9.12.2",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
-    "clsx": "^1.1.0",
+    "clsx": "^1.1.1",
     "date-fns": "^2.15.0",
     "dom-to-image-more": "^2.8.0",
     "fs": "0.0.1-security",
@@ -65,5 +65,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "^2.0.5"
   }
 }

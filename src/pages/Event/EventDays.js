@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react"
+import { makeStyles, withStyles } from "@material-ui/core/styles"
 import {
   Accordion as MuiAccordion,
   AccordionDetails as MuiAccordionDetails,
   AccordionSummary as MuiAccordionSummary,
-  Typography
-} from "@material-ui/core";
-import { compareDateStrings, parseDate } from "../../utility/time";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import EventDayRounds from "./EventDayRounds";
+  Typography,
+} from "@material-ui/core"
+import { compareDateStrings, parseDate } from "../../utility/time"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import EventDayRounds from "./EventDayRounds"
 
 function dateIsBetween(middle, left, right) {
   return middle >= left && middle <= right
@@ -16,56 +16,60 @@ function dateIsBetween(middle, left, right) {
 
 const Accordion = withStyles({
   root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
+    border: "1px solid rgba(0, 0, 0, .125)",
+    boxShadow: "none",
+    "&:not(:last-child)": {
       borderBottom: 0,
     },
-    '&:before': {
-      display: 'none',
+    "&:before": {
+      display: "none",
     },
-    '&$expanded': {
-      margin: 'auto',
+    "&$expanded": {
+      margin: "auto",
     },
   },
   expanded: {},
-})(MuiAccordion);
+})(MuiAccordion)
 
 const AccordionSummary = withStyles({
   root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    backgroundColor: "rgba(0, 0, 0, .03)",
+    borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
     minHeight: 56,
-    '&$expanded': {
+    "&$expanded": {
       minHeight: 56,
     },
   },
   content: {
-    '&$expanded': {
-      margin: '12px 0',
+    "&$expanded": {
+      margin: "12px 0",
     },
   },
   expanded: {},
-})(MuiAccordionSummary);
+})(MuiAccordionSummary)
 
-const AccordionDetails = withStyles((theme) => ({
+const AccordionDetails = withStyles(theme => ({
   root: {
     padding: theme.spacing(2),
   },
-}))(MuiAccordionDetails);
+}))(MuiAccordionDetails)
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
-  }
-}));
+  },
+}))
 
 export default function EventDays({ days }) {
   const classes = useStyles()
-  const [sortedDays] = useState([...days].sort((a, b) => compareDateStrings(a.startAt, b.startAt)))
-  const [expanded, setExpanded] = useState(sortedDays.length ? sortedDays[0].id : "")
+  const [sortedDays] = useState(
+    [...days].sort((a, b) => compareDateStrings(a.startAt, b.startAt))
+  )
+  const [expanded, setExpanded] = useState(
+    sortedDays.length ? sortedDays[0].id : ""
+  )
   const now = parseDate(new Date().toISOString())
 
   return (
@@ -86,15 +90,22 @@ export default function EventDays({ days }) {
         }
 
         return (
-          <Accordion square key={day.id} expanded={expanded === day.id} onChange={() => {
-            if (day.id === expanded) {
-              setExpanded("none")
-            } else {
-              setExpanded(day.id)
-            }
-          }}>
+          <Accordion
+            square
+            key={day.id}
+            expanded={expanded === day.id}
+            onChange={() => {
+              if (day.id === expanded) {
+                setExpanded("none")
+              } else {
+                setExpanded(day.id)
+              }
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Day {i+1}: {startDateTime} - {endDateTime}</Typography>
+              <Typography className={classes.heading}>
+                Day {i + 1}: {startDateTime} - {endDateTime}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <EventDayRounds rounds={day.rounds} />
