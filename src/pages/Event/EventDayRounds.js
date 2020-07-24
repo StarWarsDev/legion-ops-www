@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { Container, Typography } from "@material-ui/core"
+import { Container, Grid, Typography } from "@material-ui/core"
 import Matches from "./Matches"
 
 export default function EventDayRounds({ rounds }) {
@@ -9,9 +9,9 @@ export default function EventDayRounds({ rounds }) {
   )
 
   return (
-    <>
+    <Grid container direction="column">
       {sortedRounds.map((round, i) => (
-        <Container key={round.id}>
+        <Grid item key={round.id}>
           <Typography
             variant="h6"
             component="h3"
@@ -23,8 +23,8 @@ export default function EventDayRounds({ rounds }) {
           <Container>
             <Matches matches={round.matches} />
           </Container>
-        </Container>
+        </Grid>
       ))}
-    </>
+    </Grid>
   )
 }
