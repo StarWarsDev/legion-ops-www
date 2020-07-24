@@ -5,8 +5,8 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@material-ui/core"
-import { fmtDay, parseDate } from "../utility/time";
-import { fmtEventType } from "../utility/strings";
+import { fmtDay, parseDate } from "../../utility/time";
+import { fmtEventType } from "../../utility/strings";
 
 
 export function EventListItem({ event, onClick }) {

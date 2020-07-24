@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import { compareDateStrings, fmtMonth, fmtYear, parseDate } from "../../utility/time";
-import { EventListItem } from "../../common/Event";
+import { EventListItem } from "../../common/Event/EventListItem";
 import LoadingWidget from "../../common/LoadingWidget";
 import ErrorFallback from "../../common/ErrorFallback";
 import LargerTooltip from "../../common/LargerTooltip";
