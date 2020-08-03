@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   Container,
   Divider,
@@ -7,18 +7,19 @@ import {
   Modal,
   Paper,
   TextField,
-  Typography
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+  Typography,
+} from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
 import CancelIcon from "@material-ui/icons/Cancel"
 import SaveIcon from "@material-ui/icons/Save"
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client"
+import { CREATE_EVENT } from "./EventQueries"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   modal: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   paper: {
     width: "100%",
@@ -26,21 +27,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
-  }
-}));
+    padding: theme.spacing(2, 4, 3),
+  },
+}))
 
-const CREATE_EVENT = gql`
-    mutation CreateEvent($input: EventInput!) {
-        createEvent(input: $input) {
-            id
-        }
-    }
-`
-
-export default function CreateEventModal({ auth, title, eventType, open, onSaved, onCancel }) {
+export default function CreateEventModal({
+  auth,
+  title,
+  eventType,
+  open,
+  onSaved,
+  onCancel,
+}) {
   const [createEvent] = useMutation(CREATE_EVENT)
-  const classes = useStyles();
+  const classes = useStyles()
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
@@ -50,21 +50,24 @@ export default function CreateEventModal({ auth, title, eventType, open, onSaved
     setDescription("")
   }, [open])
 
-  const organizerName = auth && auth.isAuthenticated() && auth.getProfile() ? auth.getProfile().name : "";
+  const organizerName =
+    auth && auth.isAuthenticated() && auth.getProfile()
+      ? auth.getProfile().name
+      : ""
 
   const handleSaveClick = () => {
     const eventInput = {
       name,
       description,
-      type: eventType
+      type: eventType,
     }
 
     createEvent({
       variables: {
-        input: eventInput
-      }
+        input: eventInput,
+      },
     })
-      .then(({data: {createEvent}}) => onSaved(createEvent))
+      .then(({ data: { createEvent } }) => onSaved(createEvent))
       .catch(err => console.error(err))
   }
 
@@ -74,8 +77,10 @@ export default function CreateEventModal({ auth, title, eventType, open, onSaved
         <Paper className={classes.paper}>
           <Grid container direction="column" spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h5" component="h2">{title}</Typography>
-              <Divider/>
+              <Typography variant="h5" component="h2">
+                {title}
+              </Typography>
+              <Divider />
             </Grid>
 
             <form noValidate autoComplete="off">
@@ -87,11 +92,18 @@ export default function CreateEventModal({ auth, title, eventType, open, onSaved
                       label="Tournament Name"
                       value={name}
                       onChange={e => setName(e.target.value)}
-                      fullWidth/>
+                      fullWidth
+                    />
                   </Grid>
 
                   <Grid item xs={3}>
-                    <TextField id="o-name" label="Organizer" fullWidth value={organizerName} disabled/>
+                    <TextField
+                      id="o-name"
+                      label="Organizer"
+                      fullWidth
+                      value={organizerName}
+                      disabled
+                    />
                   </Grid>
                 </Grid>
               </Grid>
@@ -104,11 +116,18 @@ export default function CreateEventModal({ auth, title, eventType, open, onSaved
                   fullWidth
                   rows={10}
                   value={description}
-                  onChange={e => setDescription(e.target.value)} />
+                  onChange={e => setDescription(e.target.value)}
+                />
               </Grid>
 
               <Grid item xs={12}>
-                <Grid container direction="row" spacing={3} justify="flex-end" alignItems="center">
+                <Grid
+                  container
+                  direction="row"
+                  spacing={3}
+                  justify="flex-end"
+                  alignItems="center"
+                >
                   <Grid item>
                     <IconButton onClick={handleSaveClick}>
                       <SaveIcon />
@@ -125,5 +144,5 @@ export default function CreateEventModal({ auth, title, eventType, open, onSaved
         </Paper>
       </Container>
     </Modal>
-  );
+  )
 }
