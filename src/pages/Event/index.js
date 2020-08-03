@@ -95,16 +95,16 @@ export default function Event({
   const history = useHistory()
   const { loading, data, error, refetch } = useQuery(EVENT_QUERY, {
     variables: {
-      id: id,
+      id,
     },
     pollInterval: 15000,
   })
 
   useEffect(() => {
-    if (history.location.pathname === `/event/${id}`) {
+    if (!loading && history.location.pathname === `/event/${id}`) {
       refetch()
     }
-  }, [history])
+  }, [id, loading, refetch, history])
 
   if (loading) {
     return <LoadingWidget />
