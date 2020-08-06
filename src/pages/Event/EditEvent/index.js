@@ -13,11 +13,10 @@ import SaveIcon from "@material-ui/icons/Save"
 import CancelIcon from "@material-ui/icons/Cancel"
 import ReactMarkdown from "react-markdown"
 import { CAN_MODIFY_QUERY } from "../EditButton"
-import { EVENT_QUERY } from "../index"
 import LoadingWidget from "../../../common/LoadingWidget"
 import ErrorFallback from "../../../common/ErrorFallback"
 import { MarkdownRenderer } from "../../../common/renderer"
-import { UPDATE_EVENT } from "../../../common/EventQueries"
+import { EVENT_QUERY, UPDATE_EVENT } from "../../../constants/EventQueries"
 
 export default function EditEvent({
   match: {
@@ -76,7 +75,7 @@ export default function EditEvent({
 
   // handle errors getting event
   if (eventError) {
-    return <ErrorFallback error={error} message={error.message} />
+    return <ErrorFallback error={eventError} message={eventError.message} />
   }
 
   const { event } = eventData

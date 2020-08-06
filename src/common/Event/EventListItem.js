@@ -5,15 +5,17 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@material-ui/core"
-import { fmtDay, parseDate } from "../../utility/time";
-import { fmtEventType } from "../../utility/strings";
-
+import { fmtDay, parseDate } from "../../utility/time"
+import { fmtEventType } from "../../utility/strings"
 
 export function EventListItem({ event, onClick }) {
-  const startDate = parseDate(event.days[0].startAt)
+  let startDate = new Date()
   let secondaryLines = []
+  if (event.days.length > 0) {
+    startDate = parseDate(event.days[0].startAt)
+  }
   secondaryLines.push(
-    `${event.days.length} day${event.days.length > 1 ? "s" : ""}`
+    `${event.days.length} day${event.days.length === 1 ? "" : "s"}`
   )
   secondaryLines.push(fmtEventType(event.type))
   secondaryLines.push(`Organizer: ${event.organizer.name}`)
@@ -21,7 +23,8 @@ export function EventListItem({ event, onClick }) {
   return (
     <ListItem alignItems="flex-start" button onClick={onClick}>
       <ListItemAvatar>
-        <Avatar>{fmtDay(startDate)}</Avatar>
+        {event.days.length > 0 && <Avatar>{fmtDay(startDate)}</Avatar>}
+        {event.days.length === 0 && <Avatar>?</Avatar>}
       </ListItemAvatar>
       <ListItemText
         primary={event.name}
