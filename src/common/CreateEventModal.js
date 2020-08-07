@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import CancelIcon from "@material-ui/icons/Cancel"
 import SaveIcon from "@material-ui/icons/Save"
 import { useMutation } from "@apollo/client"
-import { CREATE_EVENT } from "../constants/EventQueries"
+import { CREATE_EVENT } from "../constants/EventMutations"
 
 const useStyles = makeStyles(theme => ({
   modal: {

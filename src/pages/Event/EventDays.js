@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { Fragment, useState } from "react"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
 import {
   Accordion as MuiAccordion,
   AccordionDetails as MuiAccordionDetails,
   AccordionSummary as MuiAccordionSummary,
+  Button,
   Typography,
 } from "@material-ui/core"
 import { compareDateStrings, parseDate } from "../../utility/time"
@@ -62,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function EventDays({ days }) {
+export default function EventDays({ canModifyEvent, days, onAddDay }) {
   const classes = useStyles()
   const [sortedDays] = useState(
     [...days].sort((a, b) => compareDateStrings(a.startAt, b.startAt))
@@ -73,7 +74,12 @@ export default function EventDays({ days }) {
   const now = parseDate(new Date().toISOString())
 
   return (
-    <>
+    <Fragment>
+      {canModifyEvent && days.length === 0 && (
+        <Fragment>
+          No days scheduled. <Button onClick={onAddDay}>Add one?</Button>
+        </Fragment>
+      )}
       {sortedDays.map((day, i) => {
         const startAt = parseDate(day.startAt)
         const startDate = new Date(startAt).toLocaleDateString()
@@ -113,6 +119,6 @@ export default function EventDays({ days }) {
           </Accordion>
         )
       })}
-    </>
+    </Fragment>
   )
 }

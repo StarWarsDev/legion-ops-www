@@ -9,6 +9,7 @@ const Event = lazy(() => import("pages/Event"))
 const Callback = lazy(() => import("pages/Callback"))
 const Info = lazy(() => import("pages/Info"))
 const EditEvent = lazy(() => import("pages/Event/EditEvent"))
+const AddDay = lazy(() => import("pages/Event/EditEvent/AddDay"))
 const MyEvents = lazy(() => import("pages/MyEvents"))
 
 function Pages() {
@@ -21,6 +22,7 @@ function Pages() {
           <Route exact path="/tournaments" component={Tournaments} />
           <Route exact path="/event/:id" component={Event} />
           <Route exact path="/event/:id/edit" component={EditEvent} />
+          <Route exact path="/event/:id/add-day" component={AddDay} />
           <Route path="/settings" component={Settings} />
           <Route path="/info" component={Info} />
           <Route path="/callback" component={Callback} />
