@@ -7,11 +7,7 @@ import { Divider, Grid, Typography } from "@material-ui/core"
 import EventList from "../../common/Event/EventList"
 import DataContext from "../../context/DataContext"
 import { useHistory } from "react-router-dom"
-import {
-  eventDaySort,
-  sortByName,
-  unscheduledEventSort,
-} from "../../utility/sort"
+import { eventDaySort, sortByName } from "../../utility/sort"
 
 export default function MyEvents() {
   const { auth } = useContext(DataContext)

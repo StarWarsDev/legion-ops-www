@@ -1,4 +1,5 @@
 import React from "react"
+import moment from "moment"
 import {
   Avatar,
   ListItem,
@@ -6,9 +7,8 @@ import {
   ListItemText,
   Typography,
 } from "@material-ui/core"
-import { fmtDay, formatDateTime, parseDate } from "../../utility/time"
+import { fmtDay, parseDate } from "../../utility/time"
 import { fmtEventType } from "../../utility/strings"
-import moment from "moment"
 
 export function EventListItem({ event, onClick }) {
   let startDate = new Date()
