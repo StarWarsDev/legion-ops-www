@@ -4,22 +4,14 @@ import LoadingWidget from "../../common/LoadingWidget"
 import ErrorFallback from "../../common/ErrorFallback"
 import { MY_PROFILE } from "../../constants/UserQueries"
 import { Divider, Grid, Typography } from "@material-ui/core"
-import { compareDateStrings } from "../../utility/time"
 import EventList from "../../common/Event/EventList"
 import DataContext from "../../context/DataContext"
 import { useHistory } from "react-router-dom"
-
-function eventNameSort(a, b) {
-  return a.name > b.name
-}
-
-function eventDaySort(a, b) {
-  const aStart = a.days[0].startAt
-  const bStart = b.days[0].startAt
-  return aStart !== bStart
-    ? compareDateStrings(aStart, bStart)
-    : eventNameSort(a, b)
-}
+import {
+  eventDaySort,
+  sortByName,
+  unscheduledEventSort,
+} from "../../utility/sort"
 
 export default function MyEvents() {
   const { auth } = useContext(DataContext)
@@ -47,7 +39,7 @@ export default function MyEvents() {
 
   const organizedUnscheduledEvents = data.myProfile.organizedEvents
     .filter(event => event.days.length === 0)
-    .sort(eventNameSort)
+    .sort(sortByName)
 
   const organizedEventsWithDays = data.myProfile.organizedEvents
     .filter(event => event.days.length > 0)
@@ -71,7 +63,7 @@ export default function MyEvents() {
     <Grid container direction="column" justify="space-around">
       <Grid item xs={12}>
         <Typography variant="h3" component="h1">
-          My Events ({totalNumEvents})
+          My Events
         </Typography>
         <Divider />
       </Grid>

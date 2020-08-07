@@ -1,5 +1,5 @@
 import React, { Fragment } from "react"
-import { List, ListItem, ListItemText } from "@material-ui/core"
+import { List, ListItem, ListItemText, Typography } from "@material-ui/core"
 import { fmtMonth, fmtYear, parseDate } from "../../utility/time"
 import { EventListItem } from "common/Event/EventListItem"
 
@@ -7,7 +7,13 @@ function EventListUnscheduled({ events, title, onClick }) {
   return (
     <Fragment>
       {events.map(event => {
-        return <EventListItem event={event} onClick={() => onClick(event)} />
+        return (
+          <EventListItem
+            key={event.id}
+            event={event}
+            onClick={() => onClick(event)}
+          />
+        )
       })}
     </Fragment>
   )
@@ -48,8 +54,9 @@ export default function EventList({ events, title, onItemClick, unscheduled }) {
   return (
     <List>
       {title && title !== "" && (
-        <ListItem>
+        <ListItem selected>
           <ListItemText>{title}</ListItemText>
+          <Typography variant="caption">Last Updated</Typography>
         </ListItem>
       )}
 

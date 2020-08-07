@@ -4,9 +4,11 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
 } from "@material-ui/core"
-import { fmtDay, parseDate } from "../../utility/time"
+import { fmtDay, formatDateTime, parseDate } from "../../utility/time"
 import { fmtEventType } from "../../utility/strings"
+import moment from "moment"
 
 export function EventListItem({ event, onClick }) {
   let startDate = new Date()
@@ -23,13 +25,16 @@ export function EventListItem({ event, onClick }) {
   return (
     <ListItem alignItems="flex-start" button onClick={onClick}>
       <ListItemAvatar>
-        {event.days.length > 0 && <Avatar>{fmtDay(startDate)}</Avatar>}
-        {event.days.length === 0 && <Avatar>?</Avatar>}
+        {(event.days.length > 0 && <Avatar>{fmtDay(startDate)}</Avatar>) ||
+          (event.days.length === 0 && <Avatar>?</Avatar>)}
       </ListItemAvatar>
       <ListItemText
         primary={event.name}
         secondary={secondaryLines.join(" - ")}
       />
+      <Typography variant="caption">
+        {moment(event.updatedAt).calendar()}
+      </Typography>
     </ListItem>
   )
 }
