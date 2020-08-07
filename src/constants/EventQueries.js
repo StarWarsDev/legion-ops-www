@@ -1,0 +1,139 @@
+import { gql } from "@apollo/client"
+
+export const CREATE_EVENT = gql`
+  mutation CreateEvent($input: EventInput!) {
+    createEvent(input: $input) {
+      id
+    }
+  }
+`
+
+export const UPDATE_EVENT = gql`
+  mutation UpdateEvent($input: EventInput!) {
+    updateEvent(input: $input) {
+      id
+    }
+  }
+`
+
+export const EVENT_QUERY = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      createdAt
+      updatedAt
+      name
+      description
+      type
+      organizer {
+        id
+        name
+        picture
+      }
+      headJudge {
+        id
+        name
+        picture
+      }
+      judges {
+        id
+        name
+        picture
+      }
+      players {
+        id
+        name
+        picture
+      }
+      days {
+        id
+        createdAt
+        updatedAt
+        startAt
+        endAt
+        rounds {
+          id
+          counter
+          matches {
+            id
+            createdAt
+            updatedAt
+            player1 {
+              id
+              name
+              picture
+            }
+            player1VictoryPoints
+            player1MarginOfVictory
+            player2 {
+              id
+              name
+              picture
+            }
+            player2VictoryPoints
+            player2MarginOfVictory
+            bye {
+              id
+              name
+              picture
+            }
+            blue {
+              id
+              name
+              picture
+            }
+            winner {
+              id
+              name
+              picture
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const ALL_EVENTS_QUERY = gql`
+  query AllEvents(
+    $eventType: EventType
+    $startsAfter: Date
+    $endsBefore: Date
+  ) {
+    events(
+      eventType: $eventType
+      startsAfter: $startsAfter
+      endsBefore: $endsBefore
+    ) {
+      id
+      createdAt
+      updatedAt
+      name
+      description
+      type
+      organizer {
+        id
+        name
+        picture
+      }
+      headJudge {
+        id
+        name
+        picture
+      }
+      judges {
+        id
+        name
+        picture
+      }
+      players {
+        id
+      }
+      days {
+        id
+        startAt
+        endAt
+      }
+    }
+  }
+`

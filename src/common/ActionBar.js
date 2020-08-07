@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react"
 import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase, Link as MUILink
-} from "@material-ui/core";
-import { fade, makeStyles } from '@material-ui/core/styles';
-import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
-import DataContext from 'context/DataContext';
-import ftLogoLight from 'assets/ftLogoLight.png';
-import ftLogoDark from 'assets/ftLogoDark.png';
-import lopsLogoLight from 'assets/Legion-Ops.png';
-import lopsLogoDark from 'assets/Legion-Ops-White.png';
-import { Link } from "react-router-dom";
+  InputBase,
+  Link as MUILink,
+} from "@material-ui/core"
+import { fade, makeStyles } from "@material-ui/core/styles"
+import { Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons"
+import DataContext from "context/DataContext"
+import ftLogoLight from "assets/ftLogoLight.png"
+import ftLogoDark from "assets/ftLogoDark.png"
+import lopsLogoLight from "assets/Legion-Ops.png"
+import lopsLogoDark from "assets/Legion-Ops-White.png"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
   grow: { flexGrow: 1 },
@@ -20,52 +21,52 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
+    "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: '100%',
+    width: "100%",
     flexGrow: 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: 'auto',
+      width: "auto",
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
-    width: '100%'
+    color: "inherit",
+    width: "100%",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%'
+    transition: theme.transitions.create("width"),
+    width: "100%",
   },
   desktopOnly: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex',
-    }
-  }
-}));
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+  },
+}))
 
 function DefaultBar() {
-  const classes = useStyles();
-  const { userSettings, setIsDrawerOpen } = useContext(DataContext);
+  const classes = useStyles()
+  const { userSettings, setIsDrawerOpen } = useContext(DataContext)
   return (
     <Toolbar variant="dense">
       <IconButton
@@ -79,7 +80,9 @@ function DefaultBar() {
       <MUILink component={Link} to="/">
         <img
           alt="Legion Ops Logo"
-          src={userSettings.themeColor === 'light' ? lopsLogoLight : lopsLogoDark}
+          src={
+            userSettings.themeColor === "light" ? lopsLogoLight : lopsLogoDark
+          }
           style={{ height: 35 }}
         />
       </MUILink>
@@ -92,7 +95,7 @@ function DefaultBar() {
       >
         <img
           alt="Fifth Trooper Logo"
-          src={userSettings.themeColor === 'light' ? ftLogoLight : ftLogoDark}
+          src={userSettings.themeColor === "light" ? ftLogoLight : ftLogoDark}
           style={{ height: 35 }}
         />
       </a>
@@ -111,11 +114,11 @@ function DefaultBar() {
         </div>
       )}
     </Toolbar>
-  );
+  )
 }
 
 function ActionBar(props) {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <div className={classes.grow}>
       <AppBar position="fixed" color="secondary">
@@ -123,7 +126,7 @@ function ActionBar(props) {
       </AppBar>
       <div style={{ height: 55 }} />
     </div>
-  );
-};
+  )
+}
 
-export default ActionBar;
+export default ActionBar

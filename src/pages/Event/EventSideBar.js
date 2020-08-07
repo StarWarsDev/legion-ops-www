@@ -1,18 +1,26 @@
-import React from "react";
-import { Container, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@material-ui/core";
-import Icon from "@mdi/react";
-import { mdiTournament } from "@mdi/js";
-import { fmtEventType } from "../../utility/strings";
-import UserList from "../../common/User/UserList";
-import UserListItem from "../../common/User/UserListItem";
-import { sortByName } from "../../utility/sort";
-import { makeStyles } from "@material-ui/core/styles";
+import React from "react"
+import {
+  Container,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from "@material-ui/core"
+import Icon from "@mdi/react"
+import { mdiTournament } from "@mdi/js"
+import { fmtEventType } from "../../utility/strings"
+import UserList from "../../common/User/UserList"
+import UserListItem from "../../common/User/UserListItem"
+import { sortByName } from "../../utility/sort"
+import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(theme => ({
   rightPanel: {
     width: "100%",
-      backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }))
 
 export default function EventSideBar({ event }) {
@@ -22,19 +30,21 @@ export default function EventSideBar({ event }) {
     <>
       <div className={classes.rightPanel}>
         <Container>
-          <Typography variant="caption" color="textSecondary">Event Style</Typography>
+          <Typography variant="caption" color="textSecondary">
+            Event Style
+          </Typography>
         </Container>
         <List dense>
           <ListItem>
             <ListItemAvatar>
-              <Icon path={mdiTournament} size={1}/>
+              <Icon path={mdiTournament} size={1} />
             </ListItemAvatar>
-            <ListItemText primary={fmtEventType(event.type)}/>
+            <ListItemText primary={fmtEventType(event.type)} />
           </ListItem>
         </List>
       </div>
 
-      <Divider/>
+      <Divider />
 
       <div className={classes.rightPanel}>
         <UserList label="Staff">
@@ -50,7 +60,7 @@ export default function EventSideBar({ event }) {
         </UserList>
       </div>
 
-      <Divider/>
+      <Divider />
 
       <div className={classes.rightPanel}>
         <UserList label={`Players - ${event.players.length}`}>

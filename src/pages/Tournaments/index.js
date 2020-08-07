@@ -1,72 +1,16 @@
 import React, { useContext, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { gql, useQuery } from "@apollo/client"
-import {
-  Divider,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@material-ui/core"
+import { useQuery } from "@apollo/client"
+import { Divider, Grid, IconButton, Typography } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
-import {
-  compareDateStrings,
-  fmtMonth,
-  fmtYear,
-  parseDate,
-} from "../../utility/time"
-import { EventListItem } from "../../common/Event/EventListItem"
+import { compareDateStrings } from "../../utility/time"
+import EventList from "../../common/Event/EventList"
 import LoadingWidget from "../../common/LoadingWidget"
 import ErrorFallback from "../../common/ErrorFallback"
 import LargerTooltip from "../../common/LargerTooltip"
 import DataContext from "../../context/DataContext"
 import CreateEventModal from "../../common/CreateEventModal"
-
-const ALL_EVENTS_QUERY = gql`
-  query AllEvents(
-    $eventType: EventType
-    $startsAfter: Date
-    $endsBefore: Date
-  ) {
-    events(
-      eventType: $eventType
-      startsAfter: $startsAfter
-      endsBefore: $endsBefore
-    ) {
-      id
-      createdAt
-      updatedAt
-      name
-      description
-      type
-      organizer {
-        id
-        name
-        picture
-      }
-      headJudge {
-        id
-        name
-        picture
-      }
-      judges {
-        id
-        name
-        picture
-      }
-      players {
-        id
-      }
-      days {
-        id
-        startAt
-        endAt
-      }
-    }
-  }
-`
+import { ALL_EVENTS_QUERY } from "../../constants/EventQueries"
 
 const now = new Date()
 
@@ -116,7 +60,6 @@ function Tournaments() {
     navigateToEvent(event.id)
   }
 
-  let curMonth = ""
   return (
     <Grid container direction="column" justify="space-around">
       <Grid item>
@@ -156,32 +99,10 @@ function Tournaments() {
       </Grid>
 
       <Grid item>
-        <List>
-          {events.map(event => {
-            const startDate = parseDate(event.days[0].startAt)
-            const month = fmtMonth(startDate)
-            const year = fmtYear(startDate)
-            const fmtMonthYear = `${month} - ${year}`
-            let printMonth = false
-            if (fmtMonthYear !== curMonth) {
-              curMonth = fmtMonthYear
-              printMonth = true
-            }
-            return (
-              <React.Fragment key={event.id}>
-                {printMonth && (
-                  <ListItem>
-                    <ListItemText primary={fmtMonthYear} />
-                  </ListItem>
-                )}
-                <EventListItem
-                  event={event}
-                  onClick={() => navigateToEvent(event.id)}
-                />
-              </React.Fragment>
-            )
-          })}
-        </List>
+        <EventList
+          events={events}
+          onItemClick={event => navigateToEvent(event.id)}
+        />
       </Grid>
     </Grid>
   )

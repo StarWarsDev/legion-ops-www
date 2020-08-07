@@ -1,5 +1,7 @@
+import moment from "moment"
+
 export function parseDate(dateTimeStr) {
-  return Date.parse(dateTimeStr)
+  return moment(dateTimeStr)
 }
 
 export function compareDateStrings(a, b) {
@@ -8,9 +10,15 @@ export function compareDateStrings(a, b) {
   return aDate - bDate
 }
 
-const dayFormatter = new Intl.DateTimeFormat("en", { day: "2-digit" })
-const monthFormatter = new Intl.DateTimeFormat("en", { month: "long" })
-const yearFormatter = new Intl.DateTimeFormat("en", { year: "numeric" })
+const dayFormatter = new Intl.DateTimeFormat(moment.locale(), {
+  day: "2-digit",
+})
+const monthFormatter = new Intl.DateTimeFormat(moment.locale(), {
+  month: "long",
+})
+const yearFormatter = new Intl.DateTimeFormat(moment.locale(), {
+  year: "numeric",
+})
 
 export function fmtMonth(d) {
   return monthFormatter.format(d)
@@ -22,4 +30,9 @@ export function fmtDay(d) {
 
 export function fmtYear(d) {
   return yearFormatter.format(d)
+}
+
+export function formatDateTime(dtStr) {
+  moment.locale()
+  return parseDate(dtStr).format("llll")
 }
