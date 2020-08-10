@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function EventSideBar({ event, onAddDay }) {
+export default function EventSideBar({ event, onAddDay, canModifyEvent }) {
   const classes = useStyles()
 
   return (
@@ -56,11 +56,13 @@ export default function EventSideBar({ event, onAddDay }) {
             <ListItemText
               primary={`Day${event.days.length === 1 ? "" : "s"}`}
             />
-            <Tooltip title="Add a day">
-              <IconButton onClick={onAddDay}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            {canModifyEvent && (
+              <Tooltip title="Add a day">
+                <IconButton onClick={onAddDay}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </ListItem>
 
           <ListItem>

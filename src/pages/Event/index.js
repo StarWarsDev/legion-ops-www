@@ -92,6 +92,7 @@ export default function Event({
         <Grid item xs={3}>
           <EventSideBar
             event={event}
+            canModifyEvent={canModifyEvent}
             onAddDay={() => history.push(`/event/${id}/add-day`)}
           />
         </Grid>
