@@ -8,7 +8,7 @@ import EventSideBar from "./EventSideBar"
 import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
 import EditButton from "./EditButton"
-import { EVENT_QUERY } from "../../constants/EventQueries"
+import { CAN_MODIFY_QUERY, EVENT_QUERY } from "../../constants/EventQueries"
 
 export default function Event({
   match: {
@@ -16,6 +16,19 @@ export default function Event({
   },
 }) {
   const history = useHistory()
+
+  // get event edit permissions
+  const {
+    loading: canModifyLoading,
+    data: canModifyData,
+    error: canModifyError,
+  } = useQuery(CAN_MODIFY_QUERY, {
+    variables: {
+      id,
+    },
+  })
+
+  // load the event data
   const { loading, data, error, refetch } = useQuery(EVENT_QUERY, {
     variables: {
       id,
@@ -33,11 +46,14 @@ export default function Event({
     return <LoadingWidget />
   }
 
-  if (error) {
-    return <ErrorFallback error={error} message={error.message} />
+  if (canModifyError || error) {
+    const err = canModifyError || error
+    return <ErrorFallback error={err} message={err.message} />
   }
 
   const { event } = data
+  const canModifyEvent =
+    !canModifyLoading && canModifyData && canModifyData.canModifyEvent
 
   return (
     <Fragment>
@@ -55,7 +71,7 @@ export default function Event({
 
         <Grid item>
           <EditButton
-            eventId={id}
+            canEdit={canModifyEvent}
             onClick={() => history.push(`/event/${id}/edit`)}
           />
         </Grid>
@@ -66,11 +82,19 @@ export default function Event({
           {event.description !== "" && (
             <EventDescription description={event.description} />
           )}
-          <EventDays days={event.days} />
+          <EventDays
+            canModifyEvent={canModifyEvent}
+            days={event.days}
+            onAddDay={() => history.push(`/event/${id}/add-day`)}
+          />
         </Grid>
 
         <Grid item xs={3}>
-          <EventSideBar event={event} />
+          <EventSideBar
+            event={event}
+            canModifyEvent={canModifyEvent}
+            onAddDay={() => history.push(`/event/${id}/add-day`)}
+          />
         </Grid>
       </Grid>
     </Fragment>

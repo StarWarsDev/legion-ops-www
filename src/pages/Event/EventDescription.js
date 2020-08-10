@@ -1,6 +1,6 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import ReactMarkdown from "react-markdown";
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import ReactMarkdown from "react-markdown"
 
 const useStyles = makeStyles(theme => ({
   hero: {
@@ -9,8 +9,8 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.typography.pxToRem(15),
     paddingLeft: theme.typography.pxToRem(15),
     marginBottom: "1rem",
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }))
 
 export default function EventDescription({ description }) {

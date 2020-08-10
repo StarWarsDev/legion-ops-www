@@ -12,11 +12,11 @@ import {
 import SaveIcon from "@material-ui/icons/Save"
 import CancelIcon from "@material-ui/icons/Cancel"
 import ReactMarkdown from "react-markdown"
-import { CAN_MODIFY_QUERY } from "../EditButton"
 import LoadingWidget from "../../../common/LoadingWidget"
 import ErrorFallback from "../../../common/ErrorFallback"
 import { MarkdownRenderer } from "../../../common/renderer"
-import { EVENT_QUERY, UPDATE_EVENT } from "../../../constants/EventQueries"
+import { CAN_MODIFY_QUERY, EVENT_QUERY } from "../../../constants/EventQueries"
+import { UPDATE_EVENT } from "../../../constants/EventMutations"
 
 export default function EditEvent({
   match: {
