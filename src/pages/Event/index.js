@@ -90,7 +90,10 @@ export default function Event({
         </Grid>
 
         <Grid item xs={3}>
-          <EventSideBar event={event} />
+          <EventSideBar
+            event={event}
+            onAddDay={() => history.push(`/event/${id}/add-day`)}
+          />
         </Grid>
       </Grid>
     </Fragment>
