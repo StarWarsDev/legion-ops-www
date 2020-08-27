@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
 import { List, ListItem, ListItemText, Typography } from "@material-ui/core"
-import { fmtMonth, fmtYear, parseDate } from "../../utility/time"
+import { fmtMonth, fmtYear, parseDate } from "utility/time"
 import { EventListItem } from "common/Event/EventListItem"
 
 function EventListUnscheduled({ events, title, onClick }) {

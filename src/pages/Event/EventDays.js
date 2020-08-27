@@ -7,7 +7,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core"
-import { compareDateStrings, parseDate } from "../../utility/time"
+import { compareDateStrings, parseDate } from "utility/time"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import EventDayRounds from "./EventDayRounds"
 

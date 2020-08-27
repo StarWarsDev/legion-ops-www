@@ -17,7 +17,7 @@ import ErrorFallback from "common/ErrorFallback"
 import { MarkdownRenderer } from "common/renderer"
 import { EVENT_QUERY } from "constants/EventQueries"
 import { UPDATE_EVENT } from "constants/EventMutations"
-import { useCanModifyEvent } from "../../../hooks/auth"
+import { useCanModifyEvent } from "hooks/auth"
 
 export default function EditEvent({
   match: {

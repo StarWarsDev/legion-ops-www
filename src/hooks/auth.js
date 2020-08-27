@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
-import DataContext from "../context/DataContext"
+import DataContext from "context/DataContext"
 import { useQuery } from "urql"
-import { CAN_MODIFY_QUERY } from "../constants/EventQueries"
+import { CAN_MODIFY_QUERY } from "constants/EventQueries"
 
 export function useIsAuthenticated() {
   const { auth } = useContext(DataContext)
