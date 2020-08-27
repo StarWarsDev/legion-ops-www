@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useQuery } from "@apollo/client"
+import { useHistory, useLocation } from "react-router-dom"
+import { useMutation, useQuery } from "urql"
 import { Grid, Typography } from "@material-ui/core"
 import LoadingWidget from "../../common/LoadingWidget"
 import ErrorFallback from "../../common/ErrorFallback"
@@ -8,7 +8,9 @@ import EventSideBar from "./EventSideBar"
 import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
 import EditButton from "./EditButton"
-import { CAN_MODIFY_QUERY, EVENT_QUERY } from "../../constants/EventQueries"
+import { EVENT_QUERY } from "../../constants/EventQueries"
+import { CREATE_ROUND } from "../../constants/EventMutations"
+import { useCanModifyEvent } from "../../hooks/auth"
 
 export default function Event({
   match: {
@@ -16,44 +18,54 @@ export default function Event({
   },
 }) {
   const history = useHistory()
-
-  // get event edit permissions
-  const {
-    loading: canModifyLoading,
-    data: canModifyData,
-    error: canModifyError,
-  } = useQuery(CAN_MODIFY_QUERY, {
-    variables: {
-      id,
-    },
-  })
+  const location = useLocation()
+  const [canModifyEvent] = useCanModifyEvent(id)
 
   // load the event data
-  const { loading, data, error, refetch } = useQuery(EVENT_QUERY, {
+  const [eventQueryResult, refetchEvent] = useQuery({
+    query: EVENT_QUERY,
     variables: {
       id,
     },
-    pollInterval: 15000,
+    displayName: "getEvent",
+    requestPolicy: "cache-and-network",
+    pollInterval: 5000,
   })
 
-  useEffect(() => {
-    if (!loading && history.location.pathname === `/event/${id}`) {
-      refetch()
-    }
-  }, [id, loading, refetch, history])
+  // mutation for adding a round
+  const [createRoundResult, createRound] = useMutation(CREATE_ROUND)
 
-  if (loading) {
+  useEffect(() => {
+    refetchEvent({ requestPolicy: "network-only" })
+  }, [location, refetchEvent, id])
+
+  useEffect(() => {
+    if (createRoundResult.error) return console.error(createRoundResult.error)
+    if (createRoundResult.fetching || !createRoundResult.data) return
+    refetchEvent({ requestPolicy: "network-only" })
+  }, [createRoundResult, refetchEvent])
+
+  const { fetching: loadingEvent, data, error } = eventQueryResult
+
+  if (loadingEvent || !data) {
     return <LoadingWidget />
   }
 
-  if (canModifyError || error) {
-    const err = canModifyError || error
+  if (error) {
+    const err = error
     return <ErrorFallback error={err} message={err.message} />
   }
 
   const { event } = data
-  const canModifyEvent =
-    !canModifyLoading && canModifyData && canModifyData.canModifyEvent
+
+  const handleAddDay = () => history.push(`/event/${id}/add-day`)
+
+  const handleAddRound = ({ day }) => {
+    createRound({
+      eventID: id,
+      dayID: day.id,
+    }).catch(err => console.error(err))
+  }
 
   return (
     <Fragment>
@@ -85,7 +97,8 @@ export default function Event({
           <EventDays
             canModifyEvent={canModifyEvent}
             days={event.days}
-            onAddDay={() => history.push(`/event/${id}/add-day`)}
+            onAddDay={handleAddDay}
+            onAddRound={handleAddRound}
           />
         </Grid>
 

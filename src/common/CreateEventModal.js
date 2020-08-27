@@ -12,7 +12,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles"
 import CancelIcon from "@material-ui/icons/Cancel"
 import SaveIcon from "@material-ui/icons/Save"
-import { useMutation } from "@apollo/client"
+import { useMutation } from "urql"
 import { CREATE_EVENT } from "../constants/EventMutations"
 
 const useStyles = makeStyles(theme => ({
@@ -32,28 +32,35 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function CreateEventModal({
-  auth,
+  isAuthenticated,
+  profile,
   title,
   eventType,
   open,
   onSaved,
   onCancel,
 }) {
-  const [createEvent] = useMutation(CREATE_EVENT)
+  const [createEventResult, createEvent] = useMutation(CREATE_EVENT)
   const classes = useStyles()
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
-  // when the open prop changes, clear the state
+  // when the open prop changes, reset the state
   useEffect(() => {
     setName("")
     setDescription("")
   }, [open])
 
-  const organizerName =
-    auth && auth.isAuthenticated() && auth.getProfile()
-      ? auth.getProfile().name
-      : ""
+  useEffect(() => {
+    const { fetching, data, error } = createEventResult
+
+    if (fetching || !data) return
+    if (error) return console.error(error)
+
+    onSaved(data.createEvent)
+  }, [createEventResult, onSaved])
+
+  const organizerName = isAuthenticated && profile ? profile.name : ""
 
   const handleSaveClick = () => {
     const eventInput = {
@@ -63,12 +70,8 @@ export default function CreateEventModal({
     }
 
     createEvent({
-      variables: {
-        input: eventInput,
-      },
+      input: eventInput,
     })
-      .then(({ data: { createEvent } }) => onSaved(createEvent))
-      .catch(err => console.error(err))
   }
 
   return (

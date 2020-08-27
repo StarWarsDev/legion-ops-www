@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { useMutation, useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "urql"
 import DateFnsUtils from "@date-io/date-fns"
 import { EVENT_QUERY } from "constants/EventQueries"
 import LoadingWidget from "common/LoadingWidget"
@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import SaveIcon from "@material-ui/icons/Save"
 import CancelIcon from "@material-ui/icons/Cancel"
 import moment from "moment"
-import { CREATE_DAY } from "../../../../constants/EventMutations"
+import { CREATE_DAY } from "constants/EventMutations"
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -35,22 +35,29 @@ export default function AddDay({
   const [start, setStart] = useState(new Date())
   const [end, setEnd] = useState(new Date())
 
-  const [createDay] = useMutation(CREATE_DAY)
+  const [createDayResult, createDay] = useMutation(CREATE_DAY)
 
   // load the event data but get it from the cache first to reduce loading times
-  const { loading, data, error } = useQuery(EVENT_QUERY, {
+  const [result] = useQuery({
+    query: EVENT_QUERY,
     variables: {
       id,
     },
-    fetchPolicy: "cache-first",
   })
 
-  if (loading) {
+  useEffect(() => {
+    if (createDayResult.error) return console.error(createDayResult.error)
+    if (createDayResult.fetching || !createDayResult.data) return
+
+    history.push(`/event/${id}`)
+  }, [createDayResult, id, history])
+
+  if (result.fetching) {
     return <LoadingWidget />
   }
 
-  if (error) {
-    return <ErrorFallback error={error} message={error.message} />
+  if (result.error) {
+    return <ErrorFallback error={result.error} message={result.error.message} />
   }
 
   const handleDayChange = date => {
@@ -68,21 +75,17 @@ export default function AddDay({
     const endStr = moment(end).format()
     // call GraphQL mutation createDay
     createDay({
-      variables: {
-        eventID: id,
-        input: {
-          startAt: startStr,
-          endAt: endStr,
-        },
+      eventID: id,
+      input: {
+        startAt: startStr,
+        endAt: endStr,
       },
     })
-      .then(() => history.push(`/event/${id}`))
-      .catch(err => console.error(err))
   }
 
   const {
     event: { name },
-  } = data
+  } = result.data
 
   return (
     <Fragment>

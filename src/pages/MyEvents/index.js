@@ -1,26 +1,21 @@
-import React, { Fragment, useContext } from "react"
-import { useQuery } from "@apollo/client"
-import LoadingWidget from "../../common/LoadingWidget"
-import ErrorFallback from "../../common/ErrorFallback"
-import { MY_PROFILE } from "../../constants/UserQueries"
-import { Divider, Grid, Typography } from "@material-ui/core"
-import EventList from "../../common/Event/EventList"
-import DataContext from "../../context/DataContext"
+import React, { Fragment } from "react"
 import { useHistory } from "react-router-dom"
-import { eventDaySort, sortByName } from "../../utility/sort"
+import { useQuery } from "urql"
+import { Divider, Grid, Typography } from "@material-ui/core"
+import LoadingWidget from "common/LoadingWidget"
+import ErrorFallback from "common/ErrorFallback"
+import { MY_PROFILE } from "constants/UserQueries"
+import EventList from "common/Event/EventList"
+import { eventDaySort, sortByName } from "utility/sort"
 
 export default function MyEvents() {
-  const { auth } = useContext(DataContext)
   const history = useHistory()
 
-  if (auth && !auth.isAuthenticated()) {
-    auth.silentAuth()
-  }
-
-  const { loading, data, error } = useQuery(MY_PROFILE)
+  const [result] = useQuery({ query: MY_PROFILE })
+  const { fetching, data, error } = result
 
   // show the loading screen
-  if (loading) {
+  if (fetching) {
     return <LoadingWidget />
   }
 
