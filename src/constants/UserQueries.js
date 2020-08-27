@@ -1,6 +1,4 @@
-import { gql } from "@apollo/client"
-
-export const MY_PROFILE = gql`
+export const MY_PROFILE = `
   query MyProfile {
     myProfile {
       account {

@@ -1,6 +1,4 @@
-import { gql } from "@apollo/client"
-
-export const EVENT_QUERY = gql`
+export const EVENT_QUERY = `
   query Event($id: ID!) {
     event(id: $id) {
       id
@@ -78,7 +76,7 @@ export const EVENT_QUERY = gql`
   }
 `
 
-export const ALL_EVENTS_QUERY = gql`
+export const ALL_EVENTS_QUERY = `
   query AllEvents(
     $eventType: EventType
     $startsAfter: Date
@@ -122,7 +120,7 @@ export const ALL_EVENTS_QUERY = gql`
   }
 `
 
-export const CAN_MODIFY_QUERY = gql`
+export const CAN_MODIFY_QUERY = `
   query CanModifyEvent($id: ID!) {
     canModifyEvent(id: $id)
   }

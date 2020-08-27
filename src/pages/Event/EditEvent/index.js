@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { useMutation, useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "urql"
 import {
   Container,
   Grid,
@@ -12,11 +12,12 @@ import {
 import SaveIcon from "@material-ui/icons/Save"
 import CancelIcon from "@material-ui/icons/Cancel"
 import ReactMarkdown from "react-markdown"
-import LoadingWidget from "../../../common/LoadingWidget"
-import ErrorFallback from "../../../common/ErrorFallback"
-import { MarkdownRenderer } from "../../../common/renderer"
-import { CAN_MODIFY_QUERY, EVENT_QUERY } from "../../../constants/EventQueries"
-import { UPDATE_EVENT } from "../../../constants/EventMutations"
+import LoadingWidget from "common/LoadingWidget"
+import ErrorFallback from "common/ErrorFallback"
+import { MarkdownRenderer } from "common/renderer"
+import { EVENT_QUERY } from "constants/EventQueries"
+import { UPDATE_EVENT } from "constants/EventMutations"
+import { useCanModifyEvent } from "../../../hooks/auth"
 
 export default function EditEvent({
   match: {
@@ -25,19 +26,11 @@ export default function EditEvent({
 }) {
   const history = useHistory()
 
-  const [updateEvent] = useMutation(UPDATE_EVENT)
+  const [updateEventResult, updateEvent] = useMutation(UPDATE_EVENT)
+  const [canModifyEvent, canModifyEventLoading] = useCanModifyEvent(id)
 
-  const { loading, data, error } = useQuery(CAN_MODIFY_QUERY, {
-    variables: {
-      id: id,
-    },
-  })
-
-  const {
-    loading: eventLoading,
-    data: eventData,
-    error: eventError,
-  } = useQuery(EVENT_QUERY, {
+  const [eventResult] = useQuery({
+    query: EVENT_QUERY,
     variables: {
       id: id,
     },
@@ -47,38 +40,42 @@ export default function EditEvent({
   const [description, setDescription] = useState("")
 
   useEffect(() => {
-    if (eventData && eventData.event) {
-      if (eventData.event.name) {
-        setName(eventData.event.name)
+    if (eventResult.data && eventResult.data.event) {
+      if (eventResult.data.event.name) {
+        setName(eventResult.data.event.name)
       }
 
-      if (eventData.event.description) {
-        setDescription(eventData.event.description)
+      if (eventResult.data.event.description) {
+        setDescription(eventResult.data.event.description)
       }
     }
-  }, [eventData])
+  }, [eventResult])
 
-  // handle errors getting permissions
-  if (error) {
-    return <ErrorFallback error={error} message={error.message} />
-  }
+  useEffect(() => {
+    if (updateEventResult.data) history.push(`/event/${id}`)
+  }, [updateEventResult, history, id])
 
   // if user is not authorized to edit, then send them back to the event page
-  if (!loading && data && !data.canModifyEvent) {
+  if (!canModifyEventLoading && !canModifyEvent) {
     history.push(`/event/${id}`)
   }
 
   // show the loading screen
-  if (eventLoading) {
+  if (eventResult.fetching) {
     return <LoadingWidget />
   }
 
   // handle errors getting event
-  if (eventError) {
-    return <ErrorFallback error={eventError} message={eventError.message} />
+  if (eventResult.error) {
+    return (
+      <ErrorFallback
+        error={eventResult.error}
+        message={eventResult.error.message}
+      />
+    )
   }
 
-  const { event } = eventData
+  const { event } = eventResult.data
 
   const handleSaveClick = () => {
     const eventInput = {
@@ -89,14 +86,12 @@ export default function EditEvent({
     }
 
     updateEvent({
-      variables: {
-        input: eventInput,
-      },
+      input: eventInput,
     })
-      .then(({ data: { updateEvent } }) =>
-        history.push(`/event/${updateEvent.id}`)
-      )
-      .catch(err => console.error(err))
+    // .then(({ data: { updateEvent } }) =>
+    //   history.push(`/event/${updateEvent.id}`)
+    // )
+    // .catch(err => console.error(err))
   }
 
   return (

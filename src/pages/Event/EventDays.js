@@ -63,7 +63,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function EventDays({ canModifyEvent, days, onAddDay }) {
+export default function EventDays({
+  canModifyEvent,
+  days,
+  onAddDay,
+  onAddRound,
+}) {
   const classes = useStyles()
   const [sortedDays] = useState(
     [...days].sort((a, b) => compareDateStrings(a.startAt, b.startAt))
@@ -114,7 +119,11 @@ export default function EventDays({ canModifyEvent, days, onAddDay }) {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <EventDayRounds rounds={day.rounds} />
+              <EventDayRounds
+                rounds={day.rounds}
+                canModifyEvent={canModifyEvent}
+                onAddRound={() => onAddRound({ day })}
+              />
             </AccordionDetails>
           </Accordion>
         )

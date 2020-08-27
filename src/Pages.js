@@ -20,9 +20,24 @@ function Pages() {
           <Route exact path="/" component={Home} />
           <Route exact path="/my-events" component={MyEvents} />
           <Route exact path="/tournaments" component={Tournaments} />
-          <Route exact path="/event/:id" component={Event} />
-          <Route exact path="/event/:id/edit" component={EditEvent} />
-          <Route exact path="/event/:id/add-day" component={AddDay} />
+          <Route
+            exact
+            path="/event/:id"
+            component={Event}
+            key={document.location.href}
+          />
+          <Route
+            exact
+            path="/event/:id/edit"
+            component={EditEvent}
+            key={document.location.href}
+          />
+          <Route
+            exact
+            path="/event/:id/add-day"
+            component={AddDay}
+            key={document.location.href}
+          />
           <Route path="/settings" component={Settings} />
           <Route path="/info" component={Info} />
           <Route path="/callback" component={Callback} />

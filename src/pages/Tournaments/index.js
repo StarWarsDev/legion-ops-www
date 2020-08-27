@@ -1,27 +1,24 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
-import { useQuery } from "@apollo/client"
+import { useQuery } from "urql"
 import { Divider, Grid, IconButton, Typography } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
-import { compareDateStrings } from "../../utility/time"
-import EventList from "../../common/Event/EventList"
-import LoadingWidget from "../../common/LoadingWidget"
-import ErrorFallback from "../../common/ErrorFallback"
-import LargerTooltip from "../../common/LargerTooltip"
-import DataContext from "../../context/DataContext"
-import CreateEventModal from "../../common/CreateEventModal"
-import { ALL_EVENTS_QUERY } from "../../constants/EventQueries"
+import { compareDateStrings } from "utility/time"
+import EventList from "common/Event/EventList"
+import LoadingWidget from "common/LoadingWidget"
+import ErrorFallback from "common/ErrorFallback"
+import LargerTooltip from "common/LargerTooltip"
+import CreateEventModal from "common/CreateEventModal"
+import { ALL_EVENTS_QUERY } from "constants/EventQueries"
+import { useIsAuthenticated, useProfile } from "hooks/auth"
 
 const now = new Date()
 
-function Tournaments() {
-  const { auth } = useContext(DataContext)
+export default function Tournaments() {
+  const [isAuthenticated] = useIsAuthenticated()
+  const [profile] = useProfile()
   const history = useHistory()
   const [open, setOpen] = useState(false)
-
-  if (auth && !auth.isAuthenticated()) {
-    auth.silentAuth()
-  }
 
   const startsAfter = new Date(now)
   startsAfter.setDate(startsAfter.getDate() - 15)
@@ -29,7 +26,8 @@ function Tournaments() {
   const endsBefore = new Date(now)
   endsBefore.setDate(endsBefore.getDate() + 180)
 
-  const { loading, error, data } = useQuery(ALL_EVENTS_QUERY, {
+  const [result] = useQuery({
+    query: ALL_EVENTS_QUERY,
     pollInterval: 60000,
     variables: {
       eventType: "FFGOP",
@@ -38,15 +36,15 @@ function Tournaments() {
     },
   })
 
-  if (loading) {
+  if (result.fetching) {
     return <LoadingWidget />
   }
 
-  if (error) {
-    return <ErrorFallback error={error} message={error.message} />
+  if (result.error) {
+    return <ErrorFallback error={result.error} message={result.error.message} />
   }
 
-  const events = data.events
+  const events = result.data.events
     .filter(event => event.type === "FFGOP" && event.days.length > 0)
     .sort((a, b) => compareDateStrings(a.days[0].startAt, b.days[0].startAt))
 
@@ -79,14 +77,15 @@ function Tournaments() {
               <IconButton
                 color="primary"
                 aria-label="create a tournament"
-                disabled={!auth || !auth.isAuthenticated()}
+                disabled={!isAuthenticated}
                 onClick={() => setOpen(true)}
               >
                 <AddIcon />
               </IconButton>
             </LargerTooltip>
             <CreateEventModal
-              auth={auth}
+              isAuthenticated={isAuthenticated}
+              profile={profile}
               title="Create a Tournament"
               eventType="FFGOP"
               open={open}
@@ -107,5 +106,3 @@ function Tournaments() {
     </Grid>
   )
 }
-
-export default Tournaments
