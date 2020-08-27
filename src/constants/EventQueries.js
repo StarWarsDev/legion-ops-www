@@ -1,4 +1,14 @@
-export const EVENT_QUERY = `
+import gql from "graphql-tag"
+
+const userFragment = gql`
+  fragment User_user on User {
+    id
+    name
+    picture
+  }
+`
+
+export const EVENT_QUERY = gql`
   query Event($id: ID!) {
     event(id: $id) {
       id
@@ -8,24 +18,16 @@ export const EVENT_QUERY = `
       description
       type
       organizer {
-        id
-        name
-        picture
+        ...User_user
       }
       headJudge {
-        id
-        name
-        picture
+        ...User_user
       }
       judges {
-        id
-        name
-        picture
+        ...User_user
       }
       players {
-        id
-        name
-        picture
+        ...User_user
       }
       days {
         id
@@ -41,42 +43,33 @@ export const EVENT_QUERY = `
             createdAt
             updatedAt
             player1 {
-              id
-              name
-              picture
+              ...User_user
             }
             player1VictoryPoints
             player1MarginOfVictory
             player2 {
-              id
-              name
-              picture
+              ...User_user
             }
             player2VictoryPoints
             player2MarginOfVictory
             bye {
-              id
-              name
-              picture
+              ...User_user
             }
             blue {
-              id
-              name
-              picture
+              ...User_user
             }
             winner {
-              id
-              name
-              picture
+              ...User_user
             }
           }
         }
       }
     }
   }
+  ${userFragment}
 `
 
-export const ALL_EVENTS_QUERY = `
+export const ALL_EVENTS_QUERY = gql`
   query AllEvents(
     $eventType: EventType
     $startsAfter: Date
@@ -94,19 +87,13 @@ export const ALL_EVENTS_QUERY = `
       description
       type
       organizer {
-        id
-        name
-        picture
+        ...User_user
       }
       headJudge {
-        id
-        name
-        picture
+        ...User_user
       }
       judges {
-        id
-        name
-        picture
+        ...User_user
       }
       players {
         id
@@ -118,9 +105,10 @@ export const ALL_EVENTS_QUERY = `
       }
     }
   }
+  ${userFragment}
 `
 
-export const CAN_MODIFY_QUERY = `
+export const CAN_MODIFY_QUERY = gql`
   query CanModifyEvent($id: ID!) {
     canModifyEvent(id: $id)
   }
