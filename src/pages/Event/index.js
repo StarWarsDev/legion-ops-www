@@ -9,7 +9,7 @@ import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
 import EditButton from "./EditButton"
 import { EVENT_QUERY } from "constants/EventQueries"
-import { CREATE_ROUND } from "constants/EventMutations"
+import { CREATE_MATCH, CREATE_ROUND } from "constants/EventMutations"
 import { useCanModifyEvent } from "hooks/auth"
 
 export default function Event({
@@ -34,6 +34,8 @@ export default function Event({
 
   // mutation for adding a round
   const [createRoundResult, createRound] = useMutation(CREATE_ROUND)
+  // mutation for adding a match
+  const [createMatchResult, createMatch] = useMutation(CREATE_MATCH)
 
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
@@ -65,6 +67,19 @@ export default function Event({
       eventID: id,
       dayID: day.id,
     }).catch(err => console.error(err))
+  }
+
+  const handleAddMatch = ({ round }) => {
+    // open the match create modal
+    // create the match with the variables below
+    // createMatch({
+    //   eventID: id,
+    //   roundID: round.id,
+    //   input: {
+    //     player1,
+    //     player2,
+    //   }
+    // })
   }
 
   return (
@@ -99,6 +114,7 @@ export default function Event({
             days={event.days}
             onAddDay={handleAddDay}
             onAddRound={handleAddRound}
+            onAddMatch={handleAddMatch}
           />
         </Grid>
 

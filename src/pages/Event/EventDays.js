@@ -68,6 +68,7 @@ export default function EventDays({
   days,
   onAddDay,
   onAddRound,
+  onAddMatch,
 }) {
   const classes = useStyles()
   const [sortedDays] = useState(
@@ -123,6 +124,7 @@ export default function EventDays({
                 rounds={day.rounds}
                 canModifyEvent={canModifyEvent}
                 onAddRound={() => onAddRound({ day })}
+                onAddMatch={({ round }) => onAddMatch({ round })}
               />
             </AccordionDetails>
           </Accordion>
