@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { useMutation, useQuery } from "urql"
 import { Grid, Typography } from "@material-ui/core"
@@ -9,8 +9,9 @@ import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
 import EditButton from "./EditButton"
 import { EVENT_QUERY } from "constants/EventQueries"
-import { CREATE_MATCH, CREATE_ROUND } from "constants/EventMutations"
+import { CREATE_ROUND } from "constants/EventMutations"
 import { useCanModifyEvent } from "hooks/auth"
+import CreateMatchModal from "../../common/CreateMatchModal"
 
 export default function Event({
   match: {
@@ -19,6 +20,8 @@ export default function Event({
 }) {
   const history = useHistory()
   const location = useLocation()
+  const [addMatchIsOpen, setAddMatchIsOpen] = useState(false)
+  const [selectedRound, setSelectedRound] = useState(null)
   const [canModifyEvent] = useCanModifyEvent(id)
 
   // load the event data
@@ -34,8 +37,6 @@ export default function Event({
 
   // mutation for adding a round
   const [createRoundResult, createRound] = useMutation(CREATE_ROUND)
-  // mutation for adding a match
-  const [createMatchResult, createMatch] = useMutation(CREATE_MATCH)
 
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
@@ -47,9 +48,14 @@ export default function Event({
     refetchEvent({ requestPolicy: "network-only" })
   }, [createRoundResult, refetchEvent])
 
-  const { fetching: loadingEvent, data, error } = eventQueryResult
+  useEffect(() => {
+    if (!addMatchIsOpen && !selectedRound) return
+    setAddMatchIsOpen(selectedRound !== null)
+  }, [addMatchIsOpen, selectedRound, setAddMatchIsOpen])
 
-  if (loadingEvent || !data) {
+  const { fetching, data, error } = eventQueryResult
+
+  if (fetching || !data) {
     return <LoadingWidget />
   }
 
@@ -70,16 +76,12 @@ export default function Event({
   }
 
   const handleAddMatch = ({ round }) => {
-    // open the match create modal
-    // create the match with the variables below
-    // createMatch({
-    //   eventID: id,
-    //   roundID: round.id,
-    //   input: {
-    //     player1,
-    //     player2,
-    //   }
-    // })
+    setSelectedRound(round)
+  }
+
+  const handleMatchCreated = ({ match }) => {
+    refetchEvent()
+    setSelectedRound(null)
   }
 
   return (
@@ -90,6 +92,16 @@ export default function Event({
         justify="space-between"
         alignItems="center"
       >
+        {addMatchIsOpen && selectedRound && (
+          <CreateMatchModal
+            open={addMatchIsOpen}
+            event={event}
+            round={selectedRound}
+            onCancel={() => setSelectedRound(null)}
+            onMatchCreated={handleMatchCreated}
+          />
+        )}
+
         <Grid item xs={11}>
           <Typography variant="h2" component="h1">
             {event.name}

@@ -3,17 +3,15 @@ import {
   Container,
   Divider,
   Grid,
-  IconButton,
   Modal,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import CancelIcon from "@material-ui/icons/Cancel"
-import SaveIcon from "@material-ui/icons/Save"
 import { useMutation } from "urql"
 import { CREATE_EVENT } from "constants/EventMutations"
+import SaveCancelButtons from "./SaveCancelButtons"
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -132,13 +130,10 @@ export default function CreateEventModal({
                   alignItems="center"
                 >
                   <Grid item>
-                    <IconButton onClick={handleSaveClick}>
-                      <SaveIcon />
-                    </IconButton>
-
-                    <IconButton onClick={onCancel}>
-                      <CancelIcon />
-                    </IconButton>
+                    <SaveCancelButtons
+                      onSave={handleSaveClick}
+                      onCancel={onCancel}
+                    />
                   </Grid>
                 </Grid>
               </Grid>

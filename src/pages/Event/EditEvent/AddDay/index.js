@@ -5,17 +5,16 @@ import DateFnsUtils from "@date-io/date-fns"
 import { EVENT_QUERY } from "constants/EventQueries"
 import LoadingWidget from "common/LoadingWidget"
 import ErrorFallback from "common/ErrorFallback"
-import { IconButton, Grid, Paper, Typography } from "@material-ui/core"
+import { Grid, Paper, Typography } from "@material-ui/core"
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardTimePicker,
 } from "@material-ui/pickers"
 import { makeStyles } from "@material-ui/core/styles"
-import SaveIcon from "@material-ui/icons/Save"
-import CancelIcon from "@material-ui/icons/Cancel"
 import moment from "moment"
 import { CREATE_DAY } from "constants/EventMutations"
+import SaveCancelButtons from "../../../../common/SaveCancelButtons"
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -134,13 +133,10 @@ export default function AddDay({
             alignItems="center"
           >
             <Grid item>
-              <IconButton onClick={handleSave}>
-                <SaveIcon />
-              </IconButton>
-
-              <IconButton onClick={() => history.push(`/event/${id}`)}>
-                <CancelIcon />
-              </IconButton>
+              <SaveCancelButtons
+                onSave={handleSave}
+                onCancel={() => history.push(`/event/${id}`)}
+              />
             </Grid>
           </Grid>
         </Grid>
