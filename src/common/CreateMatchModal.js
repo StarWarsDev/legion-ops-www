@@ -29,18 +29,27 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function playerValidForSelection(round, player, player1Id, player2Id) {
-  let isValid = player.id !== player1Id && player.id !== player2Id
+function playersAreDifferent(player, otherPlayer) {
+  return player !== otherPlayer
+}
 
-  if (isValid) {
-    round.matches.forEach(({ player1, player2 }) => {
-      if (isValid && (player1.id === player.id || player2.id === player.id)) {
-        isValid = false
-      }
-    })
-  }
+function playerIsInRound(round, player) {
+  let isInRound = false
 
-  return isValid
+  round.matches.forEach(({ player1, player2 }) => {
+    if (!isInRound && (player1.id === player.id || player2.id === player.id)) {
+      isInRound = true
+    }
+  })
+
+  return isInRound
+}
+
+function playerIsValidForSelection(player, otherPlayer, round) {
+  return (
+    playersAreDifferent(player.id, otherPlayer) &&
+    !playerIsInRound(round, player)
+  )
 }
 
 export default function CreateMatchModal({
@@ -67,18 +76,22 @@ export default function CreateMatchModal({
   }, [createMatchResult, onMatchCreated])
 
   useEffect(() => {
-    let isValid = false
+    // don't validate if the round is null
+    if (!round) return
 
-    if (player1 !== "" && player2 !== "" && player1 !== player2) {
-      isValid = true
-    }
+    const hasBlankPlayer = player1 === "" || player2 === ""
+    const areDifferent = playersAreDifferent(player1, player2)
+    const player1IsInRound = playerIsInRound(round, { id: player1 })
+    const player2IsInRound = playerIsInRound(round, { id: player2 })
 
-    // TODO: ensure that each player has not already been assigned to another match
+    const isValid =
+      !hasBlankPlayer && areDifferent && !player1IsInRound && !player2IsInRound
 
+    // only change the state if it is different
     if (isValid !== selectionIsValid) {
       setSelectionIsValid(isValid)
     }
-  }, [player1, player2, selectionIsValid])
+  }, [round, player1, player2, selectionIsValid])
 
   const handlePlayerChange = setter => ({ target: { value } }) => {
     setter(value)
@@ -129,7 +142,7 @@ export default function CreateMatchModal({
                     key={`player1-${player.id}`}
                     value={player.id}
                     disabled={
-                      !playerValidForSelection(round, player, player1, player2)
+                      !playerIsValidForSelection(player, player2, round)
                     }
                   >
                     {player.name}
@@ -146,7 +159,7 @@ export default function CreateMatchModal({
                     key={`player2-${player.id}`}
                     value={player.id}
                     disabled={
-                      !playerValidForSelection(round, player, player1, player2)
+                      !playerIsValidForSelection(player, player1, round)
                     }
                   >
                     {player.name}
