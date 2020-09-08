@@ -9,9 +9,14 @@ import EventDescription from "./EventDescription"
 import EventDays from "./EventDays"
 import EditButton from "./EditButton"
 import { EVENT_QUERY } from "constants/EventQueries"
-import { CREATE_ROUND } from "constants/EventMutations"
+import {
+  CREATE_ROUND,
+  PUBLISH_EVENT,
+  UNPUBLISH_EVENT,
+} from "constants/EventMutations"
 import { useCanModifyEvent } from "hooks/auth"
 import CreateMatchModal from "../../common/CreateMatchModal"
+import PublishButton from "./PublishButton"
 
 export default function Event({
   match: {
@@ -38,9 +43,15 @@ export default function Event({
   // mutation for adding a round
   const [createRoundResult, createRound] = useMutation(CREATE_ROUND)
 
+  // mutation for publishing an event
+  const [publishEventResult, publishEvent] = useMutation(PUBLISH_EVENT)
+
+  // mutation for unpublishing an event
+  const [unpublishEventResult, unpublishEvent] = useMutation(UNPUBLISH_EVENT)
+
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
-  }, [location, refetchEvent, id])
+  }, [location, refetchEvent, id, publishEventResult, unpublishEventResult])
 
   useEffect(() => {
     if (createRoundResult.error) return console.error(createRoundResult.error)
@@ -102,7 +113,7 @@ export default function Event({
           />
         )}
 
-        <Grid item xs={11}>
+        <Grid item xs={9}>
           <Typography variant="h2" component="h1">
             {event.name}
           </Typography>
@@ -112,6 +123,12 @@ export default function Event({
           <EditButton
             canEdit={canModifyEvent}
             onClick={() => history.push(`/event/${id}/edit`)}
+          />
+          <PublishButton
+            published={event.published}
+            canModifyEvent={canModifyEvent}
+            onPublishClick={() => publishEvent({ eventId: event.id })}
+            onUnpublishClick={() => unpublishEvent({ eventId: event.id })}
           />
         </Grid>
       </Grid>

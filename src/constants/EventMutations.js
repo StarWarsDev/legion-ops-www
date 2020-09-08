@@ -15,6 +15,22 @@ export const UPDATE_EVENT = gql`
     }
   }
 `
+export const PUBLISH_EVENT = gql`
+  mutation PublishEvent($eventId: ID!) {
+    publishEvent(eventId: $eventId) {
+      id
+      published
+    }
+  }
+`
+export const UNPUBLISH_EVENT = gql`
+  mutation UnpublishEvent($eventId: ID!) {
+    unpublishEvent(eventId: $eventId) {
+      id
+      published
+    }
+  }
+`
 export const CREATE_DAY = gql`
   mutation CreateDay($eventID: ID!, $input: EventDayInput!) {
     createDay(eventID: $eventID, input: $input) {

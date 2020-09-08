@@ -1,105 +1,53 @@
-export const MY_PROFILE = `
+import gql from "graphql-tag/src"
+import { userFragment } from "./EventQueries"
+
+const eventFragment = gql`
+  fragment event_Event on Event {
+    id
+    createdAt
+    updatedAt
+    name
+    description
+    type
+    published
+    organizer {
+      ...User_user
+    }
+    headJudge {
+      ...User_user
+    }
+    judges {
+      ...User_user
+    }
+    players {
+      id
+    }
+    days {
+      id
+      startAt
+      endAt
+    }
+  }
+`
+
+export const MY_PROFILE = gql`
   query MyProfile {
     myProfile {
       account {
-        id
-        name
-        picture
+        ...User_user
         username
       }
       organizedEvents {
-        id
-        createdAt
-        updatedAt
-        name
-        description
-        type
-        organizer {
-          id
-          name
-          picture
-        }
-        headJudge {
-          id
-          name
-          picture
-        }
-        judges {
-          id
-          name
-          picture
-        }
-        players {
-          id
-        }
-        days {
-          id
-          startAt
-          endAt
-        }
+        ...event_Event
       }
       judgingEvents {
-        id
-        createdAt
-        updatedAt
-        name
-        description
-        type
-        organizer {
-          id
-          name
-          picture
-        }
-        headJudge {
-          id
-          name
-          picture
-        }
-        judges {
-          id
-          name
-          picture
-        }
-        players {
-          id
-        }
-        days {
-          id
-          startAt
-          endAt
-        }
+        ...event_Event
       }
       participatingEvents {
-        id
-        createdAt
-        updatedAt
-        name
-        description
-        type
-        organizer {
-          id
-          name
-          picture
-        }
-        headJudge {
-          id
-          name
-          picture
-        }
-        judges {
-          id
-          name
-          picture
-        }
-        players {
-          id
-        }
-        days {
-          id
-          startAt
-          endAt
-        }
+        ...event_Event
       }
     }
   }
+  ${eventFragment}
+  ${userFragment}
 `

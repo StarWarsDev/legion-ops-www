@@ -17,6 +17,7 @@ export const EVENT_QUERY = gql`
       name
       description
       type
+      published
       organizer {
         ...User_user
       }
