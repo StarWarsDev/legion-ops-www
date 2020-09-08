@@ -41,6 +41,7 @@ export default function CreateMatchModal({
   const [createMatchResult, createMatch] = useMutation(CREATE_MATCH)
   const [player1, setPlayer1] = useState("")
   const [player2, setPlayer2] = useState("")
+  const [selectionIsValid, setSelectionIsValid] = useState(false)
 
   useEffect(() => {
     if (createMatchResult.fetching) return
@@ -50,6 +51,18 @@ export default function CreateMatchModal({
     // call the onMatchCreated callback and pass in the match
     onMatchCreated({ match: createMatchResult.data })
   }, [createMatchResult, onMatchCreated])
+
+  useEffect(() => {
+    let isValid = false
+
+    if (player1 !== "" && player2 !== "" && player1 !== player2) {
+      isValid = true
+    }
+
+    if (isValid !== selectionIsValid) {
+      setSelectionIsValid(isValid)
+    }
+  }, [player1, player2, selectionIsValid])
 
   const handlePlayerChange = setter => ({ target: { value } }) => {
     setter(value)
@@ -123,7 +136,11 @@ export default function CreateMatchModal({
             </FormControl>
           </div>
 
-          <SaveCancelButtons onSave={handleSave} onCancel={onCancel} />
+          <SaveCancelButtons
+            onSave={handleSave}
+            onCancel={onCancel}
+            saveDisabled={!selectionIsValid}
+          />
         </Paper>
       </Container>
     </Modal>
