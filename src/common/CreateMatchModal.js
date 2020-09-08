@@ -96,7 +96,11 @@ export default function CreateMatchModal({
               <InputLabel>Player 1</InputLabel>
               <Select value={player1} onChange={handlePlayerChange(setPlayer1)}>
                 {event.players.map(player => (
-                  <MenuItem key={`player1-${player.id}`} value={player.id}>
+                  <MenuItem
+                    key={`player1-${player.id}`}
+                    value={player.id}
+                    disabled={player2 === player.id}
+                  >
                     {player.name}
                   </MenuItem>
                 ))}
@@ -107,7 +111,11 @@ export default function CreateMatchModal({
               <InputLabel>Player 2</InputLabel>
               <Select value={player2} onChange={handlePlayerChange(setPlayer2)}>
                 {event.players.map(player => (
-                  <MenuItem key={`player2-${player.id}`} value={player.id}>
+                  <MenuItem
+                    key={`player2-${player.id}`}
+                    value={player.id}
+                    disabled={player1 === player.id}
+                  >
                     {player.name}
                   </MenuItem>
                 ))}
