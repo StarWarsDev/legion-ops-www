@@ -29,6 +29,20 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+function playerValidForSelection(round, player, player1Id, player2Id) {
+  let isValid = player.id !== player1Id && player.id !== player2Id
+
+  if (isValid) {
+    round.matches.forEach(({ player1, player2 }) => {
+      if (isValid && (player1.id === player.id || player2.id === player.id)) {
+        isValid = false
+      }
+    })
+  }
+
+  return isValid
+}
+
 export default function CreateMatchModal({
   open,
   event,
@@ -58,6 +72,8 @@ export default function CreateMatchModal({
     if (player1 !== "" && player2 !== "" && player1 !== player2) {
       isValid = true
     }
+
+    // TODO: ensure that each player has not already been assigned to another match
 
     if (isValid !== selectionIsValid) {
       setSelectionIsValid(isValid)
@@ -112,7 +128,9 @@ export default function CreateMatchModal({
                   <MenuItem
                     key={`player1-${player.id}`}
                     value={player.id}
-                    disabled={player2 === player.id}
+                    disabled={
+                      !playerValidForSelection(round, player, player1, player2)
+                    }
                   >
                     {player.name}
                   </MenuItem>
@@ -127,7 +145,9 @@ export default function CreateMatchModal({
                   <MenuItem
                     key={`player2-${player.id}`}
                     value={player.id}
-                    disabled={player1 === player.id}
+                    disabled={
+                      !playerValidForSelection(round, player, player1, player2)
+                    }
                   >
                     {player.name}
                   </MenuItem>
