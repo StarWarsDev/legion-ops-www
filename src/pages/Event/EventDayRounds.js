@@ -1,10 +1,22 @@
 import React, { useState } from "react"
 
-import { Container, Grid, Typography } from "@material-ui/core"
+import {
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
 import Matches from "./Matches"
-import Button from "@material-ui/core/Button"
 
-export default function EventDayRounds({ rounds, canModifyEvent, onAddRound }) {
+export default function EventDayRounds({
+  rounds,
+  canModifyEvent,
+  onAddRound,
+  onAddMatch,
+}) {
   const [sortedRounds] = useState(
     [...rounds].sort((a, b) => a.counter - b.counter)
   )
@@ -23,13 +35,30 @@ export default function EventDayRounds({ rounds, canModifyEvent, onAddRound }) {
 
       {sortedRounds.map((round, i) => (
         <Grid item key={round.id}>
-          <Typography
-            variant="h6"
-            component="h3"
-            style={{ marginBottom: "0.5rem" }}
-          >
-            Round {i + 1}
-          </Typography>
+          <Grid container direction="row" justify="flex-end">
+            <Grid item xs={11}>
+              <Typography
+                variant="h6"
+                component="h3"
+                style={{ marginBottom: "0.5rem" }}
+              >
+                Round {i + 1}
+              </Typography>
+            </Grid>
+
+            {canModifyEvent && (
+              <Grid item>
+                <Tooltip title={`Create a match in Round ${i + 1}`}>
+                  <IconButton
+                    size="small"
+                    onClick={() => onAddMatch({ round })}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            )}
+          </Grid>
 
           <Container>
             <Matches matches={round.matches} />

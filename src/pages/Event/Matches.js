@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { Grid, Typography } from "@material-ui/core"
-import UserCard from "../../common/User/UserCard"
+import UserCard from "common/User/UserCard"
 import { makeStyles } from "@material-ui/core/styles"
-import { compareDateStrings } from "../../utility/time"
+import { compareDateStrings } from "utility/time"
 
 const useStyles = makeStyles(theme => ({
   vs: {

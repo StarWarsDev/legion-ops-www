@@ -4,20 +4,18 @@ import { useMutation, useQuery } from "urql"
 import {
   Container,
   Grid,
-  IconButton,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core"
-import SaveIcon from "@material-ui/icons/Save"
-import CancelIcon from "@material-ui/icons/Cancel"
 import ReactMarkdown from "react-markdown"
 import LoadingWidget from "common/LoadingWidget"
 import ErrorFallback from "common/ErrorFallback"
 import { MarkdownRenderer } from "common/renderer"
 import { EVENT_QUERY } from "constants/EventQueries"
 import { UPDATE_EVENT } from "constants/EventMutations"
-import { useCanModifyEvent } from "../../../hooks/auth"
+import { useCanModifyEvent } from "hooks/auth"
+import SaveCancelButtons from "../../../common/SaveCancelButtons"
 
 export default function EditEvent({
   match: {
@@ -173,15 +171,10 @@ export default function EditEvent({
                       alignItems="center"
                     >
                       <Grid item>
-                        <IconButton onClick={handleSaveClick}>
-                          <SaveIcon />
-                        </IconButton>
-
-                        <IconButton
-                          onClick={() => history.push(`/event/${id}`)}
-                        >
-                          <CancelIcon />
-                        </IconButton>
+                        <SaveCancelButtons
+                          onSave={handleSaveClick}
+                          onCancel={() => history.push(`/event/${id}`)}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>

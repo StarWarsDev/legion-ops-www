@@ -7,8 +7,8 @@ import {
   ListItemText,
   Typography,
 } from "@material-ui/core"
-import { fmtDay, parseDate } from "../../utility/time"
-import { fmtEventType } from "../../utility/strings"
+import { fmtDay, parseDate } from "utility/time"
+import { fmtEventType } from "utility/strings"
 
 export function EventListItem({ event, onClick }) {
   let startDate = new Date()
