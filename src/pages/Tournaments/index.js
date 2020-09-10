@@ -73,16 +73,17 @@ export default function Tournaments() {
             </Typography>
           </Grid>
           <Grid item>
-            <LargerTooltip arrow title="Create a tournament">
-              <IconButton
-                color="primary"
-                aria-label="create a tournament"
-                disabled={!isAuthenticated}
-                onClick={() => setOpen(true)}
-              >
-                <AddIcon />
-              </IconButton>
-            </LargerTooltip>
+            {isAuthenticated && (
+              <LargerTooltip arrow title="Create a tournament">
+                <IconButton
+                  color="primary"
+                  aria-label="create a tournament"
+                  onClick={() => setOpen(true)}
+                >
+                  <AddIcon />
+                </IconButton>
+              </LargerTooltip>
+            )}
             <CreateEventModal
               isAuthenticated={isAuthenticated}
               profile={profile}

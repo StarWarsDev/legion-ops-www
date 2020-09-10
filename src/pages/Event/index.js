@@ -14,7 +14,7 @@ import {
   PUBLISH_EVENT,
   UNPUBLISH_EVENT,
 } from "constants/EventMutations"
-import { useCanModifyEvent } from "hooks/auth"
+import { useCanModifyEvent, useProfile } from "hooks/auth"
 import CreateMatchModal from "../../common/CreateMatchModal"
 import PublishButton from "./PublishButton"
 
