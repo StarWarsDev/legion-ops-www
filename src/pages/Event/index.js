@@ -14,7 +14,7 @@ import {
   PUBLISH_EVENT,
   UNPUBLISH_EVENT,
 } from "constants/EventMutations"
-import { useCanModifyEvent, useProfile } from "hooks/auth"
+import { useCanModifyEvent, useIsAuthenticated, useProfile } from "hooks/auth"
 import CreateMatchModal from "../../common/CreateMatchModal"
 import PublishButton from "./PublishButton"
 
@@ -25,6 +25,8 @@ export default function Event({
 }) {
   const history = useHistory()
   const location = useLocation()
+  const isAuthenticated = useIsAuthenticated()
+  const profile = useProfile()
   const [addMatchIsOpen, setAddMatchIsOpen] = useState(false)
   const [selectedRound, setSelectedRound] = useState(null)
   const [canModifyEvent] = useCanModifyEvent(id)
@@ -119,18 +121,21 @@ export default function Event({
           </Typography>
         </Grid>
 
-        <Grid item>
-          <EditButton
-            canEdit={canModifyEvent}
-            onClick={() => history.push(`/event/${id}/edit`)}
-          />
-          <PublishButton
-            published={event.published}
-            canModifyEvent={canModifyEvent}
-            onPublishClick={() => publishEvent({ eventId: event.id })}
-            onUnpublishClick={() => unpublishEvent({ eventId: event.id })}
-          />
-        </Grid>
+        {isAuthenticated && (
+          <Grid item>
+            {canModifyEvent && (
+              <EditButton onClick={() => history.push(`/event/${id}/edit`)} />
+            )}
+
+            {canModifyEvent && (
+              <PublishButton
+                published={event.published}
+                onPublishClick={() => publishEvent({ eventId: event.id })}
+                onUnpublishClick={() => unpublishEvent({ eventId: event.id })}
+              />
+            )}
+          </Grid>
+        )}
       </Grid>
 
       <Grid container spacing={3} direction="row">
@@ -151,7 +156,10 @@ export default function Event({
           <EventSideBar
             event={event}
             canModifyEvent={canModifyEvent}
+            isAuthenticated={isAuthenticated}
+            profile={profile}
             onAddDay={() => history.push(`/event/${id}/add-day`)}
+            onRegister={() => console.log("register the player")}
           />
         </Grid>
       </Grid>

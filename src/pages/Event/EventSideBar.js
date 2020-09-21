@@ -28,8 +28,19 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function EventSideBar({ event, onAddDay, canModifyEvent }) {
+export default function EventSideBar({
+  event,
+  onAddDay,
+  onRegister,
+  canModifyEvent,
+  isAuthenticated,
+  profile,
+}) {
   const classes = useStyles()
+
+  let profileInPlayers =
+    event.players.filter(player => player.username === profile.username)
+      .length > 0
 
   return (
     <Fragment>
@@ -95,7 +106,11 @@ export default function EventSideBar({ event, onAddDay, canModifyEvent }) {
       <Divider />
 
       <div className={classes.rightPanel}>
-        <UserList label="Players">
+        <UserList
+          label="Players"
+          showRegisterButton={isAuthenticated && profile && !profileInPlayers}
+          onRegisterClick={onRegister}
+        >
           {[...event.players].sort(sortByName).map(player => (
             <UserListItem key={player.id} user={player} />
           ))}
