@@ -5,7 +5,9 @@ export default function UserList({
   children,
   label,
   showRegisterButton,
+  showLeaveButton,
   onRegisterClick,
+  onLeaveClick,
 }) {
   return (
     <Fragment>
@@ -20,6 +22,14 @@ export default function UserList({
           <Grid item>
             <Button size="small" onClick={onRegisterClick}>
               Sign Up
+            </Button>
+          </Grid>
+        )}
+
+        {showLeaveButton && (
+          <Grid item>
+            <Button size="small" onClick={onLeaveClick}>
+              Leave
             </Button>
           </Grid>
         )}

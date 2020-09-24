@@ -32,6 +32,7 @@ export default function EventSideBar({
   event,
   onAddDay,
   onRegister,
+  onLeave,
   canModifyEvent,
   isAuthenticated,
   profile,
@@ -108,8 +109,15 @@ export default function EventSideBar({
       <div className={classes.rightPanel}>
         <UserList
           label="Players"
-          showRegisterButton={isAuthenticated && profile && !profileInPlayers}
+          showRegisterButton={
+            event.registration === "OPEN" &&
+            isAuthenticated &&
+            profile &&
+            !profileInPlayers
+          }
+          showLeaveButton={isAuthenticated && profile && profileInPlayers}
           onRegisterClick={onRegister}
+          onLeaveClick={onLeave}
         >
           {[...event.players].sort(sortByName).map(player => (
             <UserListItem key={player.id} user={player} />

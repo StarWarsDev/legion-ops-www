@@ -11,6 +11,8 @@ import EditButton from "./EditButton"
 import { EVENT_QUERY } from "constants/EventQueries"
 import {
   CREATE_ROUND,
+  JOIN_EVENT,
+  LEAVE_EVENT,
   PUBLISH_EVENT,
   UNPUBLISH_EVENT,
 } from "constants/EventMutations"
@@ -51,6 +53,12 @@ export default function Event({
   // mutation for unpublishing an event
   const [unpublishEventResult, unpublishEvent] = useMutation(UNPUBLISH_EVENT)
 
+  // mutation for joining an event
+  const [joinEventResult, joinEvent] = useMutation(JOIN_EVENT)
+
+  // mutation for leaving an event
+  const [leaveEventResult, leaveEvent] = useMutation(LEAVE_EVENT)
+
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
   }, [location, refetchEvent, id, publishEventResult, unpublishEventResult])
@@ -65,6 +73,14 @@ export default function Event({
     if (!addMatchIsOpen && !selectedRound) return
     setAddMatchIsOpen(selectedRound !== null)
   }, [addMatchIsOpen, selectedRound, setAddMatchIsOpen])
+
+  useEffect(() => {
+    refetchEvent({ requestPolicy: "network-only" })
+  }, [joinEventResult, refetchEvent])
+
+  useEffect(() => {
+    refetchEvent({ requestPolicy: "network-only" })
+  }, [leaveEventResult, refetchEvent])
 
   const { fetching, data, error } = eventQueryResult
 
@@ -95,6 +111,20 @@ export default function Event({
   const handleMatchCreated = ({ match }) => {
     refetchEvent()
     setSelectedRound(null)
+  }
+
+  const handleRegister = () => {
+    // call joinEvent
+    joinEvent({
+      eventId: id,
+    }).catch(err => console.error(err))
+  }
+
+  const handleLeave = () => {
+    // call leaveEvent
+    leaveEvent({
+      eventId: id,
+    }).catch(err => console.error(err))
   }
 
   return (
@@ -159,7 +189,8 @@ export default function Event({
             isAuthenticated={isAuthenticated}
             profile={profile}
             onAddDay={() => history.push(`/event/${id}/add-day`)}
-            onRegister={() => console.log("register the player")}
+            onRegister={handleRegister}
+            onLeave={handleLeave}
           />
         </Grid>
       </Grid>
