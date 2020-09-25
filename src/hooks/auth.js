@@ -10,7 +10,17 @@ export function useIsAuthenticated() {
     if (!auth) return
 
     if (!auth.isAuthenticated()) {
-      auth.silentAuth()
+      auth
+        .silentAuth()
+        .then(() => {
+          setIsAuthenticated(auth.isAuthenticated())
+        })
+        .catch(err => {
+          if (err.code !== "login_required") {
+            console.error(err)
+          }
+          setIsAuthenticated(false)
+        })
     }
 
     setIsAuthenticated(auth.isAuthenticated())
@@ -26,7 +36,17 @@ export function useProfile() {
     if (!auth) return
 
     if (!auth.isAuthenticated()) {
-      auth.silentAuth()
+      auth
+        .silentAuth()
+        .then(() => {
+          setProfile(auth.getProfile())
+        })
+        .catch(err => {
+          if (err.code !== "login_required") {
+            console.error(err)
+          }
+          setProfile(null)
+        })
     }
 
     setProfile(auth.getProfile())

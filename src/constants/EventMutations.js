@@ -62,3 +62,25 @@ export const CREATE_MATCH = gql`
   }
   ${userFragment}
 `
+export const JOIN_EVENT = gql`
+  mutation JoinEvent($eventId: ID!) {
+    joinEvent(eventId: $eventId) {
+      id
+      players {
+        ...User_user
+      }
+    }
+  }
+  ${userFragment}
+`
+export const LEAVE_EVENT = gql`
+  mutation LeaveEvent($eventId: ID!) {
+    leaveEvent(eventId: $eventId) {
+      id
+      players {
+        ...User_user
+      }
+    }
+  }
+  ${userFragment}
+`

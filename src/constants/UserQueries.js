@@ -10,6 +10,7 @@ const eventFragment = gql`
     description
     type
     published
+    registration
     organizer {
       ...User_user
     }
@@ -28,6 +29,7 @@ const eventFragment = gql`
       endAt
     }
   }
+  ${userFragment}
 `
 
 export const MY_PROFILE = gql`
@@ -49,5 +51,4 @@ export const MY_PROFILE = gql`
     }
   }
   ${eventFragment}
-  ${userFragment}
 `

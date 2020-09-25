@@ -18,6 +18,7 @@ export const EVENT_QUERY = gql`
       description
       type
       published
+      registration
       organizer {
         ...User_user
       }
@@ -87,6 +88,7 @@ export const ALL_EVENTS_QUERY = gql`
       name
       description
       type
+      registration
       organizer {
         ...User_user
       }

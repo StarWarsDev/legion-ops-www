@@ -1,15 +1,11 @@
-import React, { Fragment } from "react"
+import React from "react"
 import { IconButton } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 
-export default function EditButton({ canEdit, onClick }) {
+export default function EditButton({ onClick }) {
   return (
-    <Fragment>
-      {canEdit && (
-        <IconButton onClick={onClick}>
-          <EditIcon />
-        </IconButton>
-      )}
-    </Fragment>
+    <IconButton onClick={onClick}>
+      <EditIcon />
+    </IconButton>
   )
 }
