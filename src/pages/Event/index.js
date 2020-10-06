@@ -14,6 +14,7 @@ import {
   JOIN_EVENT,
   LEAVE_EVENT,
   PUBLISH_EVENT,
+  SET_REGISTRATION,
   UNPUBLISH_EVENT,
 } from "constants/EventMutations"
 import { useCanModifyEvent, useIsAuthenticated, useProfile } from "hooks/auth"
@@ -59,6 +60,9 @@ export default function Event({
   // mutation for leaving an event
   const [leaveEventResult, leaveEvent] = useMutation(LEAVE_EVENT)
 
+  // mutation for setting registration type
+  const [setRegistrationResult, setRegistration] = useMutation(SET_REGISTRATION)
+
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
   }, [location, refetchEvent, id, publishEventResult, unpublishEventResult])
@@ -81,6 +85,10 @@ export default function Event({
   useEffect(() => {
     refetchEvent({ requestPolicy: "network-only" })
   }, [leaveEventResult, refetchEvent])
+
+  useEffect(() => {
+    refetchEvent({ requestPolicy: "network-only" })
+  }, [setRegistrationResult, refetchEvent])
 
   const { fetching, data, error } = eventQueryResult
 
@@ -124,6 +132,14 @@ export default function Event({
     // call leaveEvent
     leaveEvent({
       eventId: id,
+    }).catch(err => console.error(err))
+  }
+
+  const handleRegistrationChange = registrationType => {
+    // call mutation
+    setRegistration({
+      eventId: id,
+      registrationType
     }).catch(err => console.error(err))
   }
 
@@ -191,6 +207,7 @@ export default function Event({
             onAddDay={() => history.push(`/event/${id}/add-day`)}
             onRegister={handleRegister}
             onLeave={handleLeave}
+            onRegistrationChange={registrationType => handleRegistrationChange(registrationType)}
           />
         </Grid>
       </Grid>
