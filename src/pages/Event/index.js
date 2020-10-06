@@ -28,8 +28,8 @@ export default function Event({
 }) {
   const history = useHistory()
   const location = useLocation()
-  const isAuthenticated = useIsAuthenticated()
-  const profile = useProfile()
+  const [isAuthenticated] = useIsAuthenticated()
+  const [profile] = useProfile()
   const [addMatchIsOpen, setAddMatchIsOpen] = useState(false)
   const [selectedRound, setSelectedRound] = useState(null)
   const [canModifyEvent] = useCanModifyEvent(id)
