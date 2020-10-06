@@ -55,10 +55,24 @@ export default function EventSideBar({
     setRegistration(value)
   }
 
-  let profileInPlayers =
-    event.players.filter(player => player.username === profile.username)
+  const profileIsOrganizer = profile && event.organizer.username === profile.email
+
+  const profileInJudges =
+    profile && event && event.judges.filter(judge => judge.username === profile.email)
+      .length > 0
+
+  const profileInPlayers =
+    profile && event && event.players.filter(player => player.username === profile.email)
       .length > 0
   
+  const showRegisterButton = event.registration === "OPEN" &&
+    isAuthenticated &&
+    profile &&
+    !profileIsOrganizer &&
+    !profileInJudges &&
+    !profileInPlayers
+  const showLeaveButton = isAuthenticated && profile && profileInPlayers
+
   return (
     <Fragment>
       <div className={classes.rightPanel}>
@@ -140,13 +154,8 @@ export default function EventSideBar({
       <div className={classes.rightPanel}>
         <UserList
           label="Players"
-          showRegisterButton={
-            event.registration === "OPEN" &&
-            isAuthenticated &&
-            profile &&
-            !profileInPlayers
-          }
-          showLeaveButton={isAuthenticated && profile && profileInPlayers}
+          showRegisterButton={showRegisterButton}
+          showLeaveButton={showLeaveButton}
           onRegisterClick={onRegister}
           onLeaveClick={onLeave}
         >
