@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import {
   Avatar,
   Container,
@@ -7,6 +7,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  MenuItem,
+  Select,
   Tooltip,
   Typography,
 } from "@material-ui/core"
@@ -19,6 +21,8 @@ import { sortByName } from "utility/sort"
 import { makeStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
 import AddIcon from "@material-ui/icons/Add"
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import { RegistrationTypes } from "constants/event"
 
 const useStyles = makeStyles(theme => ({
   rightPanel: {
@@ -33,16 +37,28 @@ export default function EventSideBar({
   onAddDay,
   onRegister,
   onLeave,
+  onRegistrationChange,
   canModifyEvent,
   isAuthenticated,
   profile,
 }) {
   const classes = useStyles()
+  const [registration, setRegistration] = useState(event.registration)
+  
+  useEffect(() => {
+    if (event.registration !== registration) {
+      onRegistrationChange(registration)
+    }
+  }, [event, registration, onRegistrationChange])
+
+  const handleRegistrationChange = ({ target: { value }}) => {
+    setRegistration(value)
+  }
 
   let profileInPlayers =
     event.players.filter(player => player.username === profile.username)
       .length > 0
-
+  
   return (
     <Fragment>
       <div className={classes.rightPanel}>
@@ -52,6 +68,21 @@ export default function EventSideBar({
           </Typography>
         </Container>
         <List dense>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <AssignmentIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Registration" secondary={canModifyEvent ? "" : event.registration} />
+            {canModifyEvent && (
+              <Select value={event.registration} onChange={e => handleRegistrationChange(e)}>
+                {Object.keys(RegistrationTypes).map(key => (
+                  <MenuItem key={key} value={key}>{RegistrationTypes[key]}</MenuItem>
+                ))}
+              </Select>
+            )}
+          </ListItem>
           <ListItem>
             <ListItemAvatar>
               <Avatar>

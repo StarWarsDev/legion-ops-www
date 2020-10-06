@@ -31,6 +31,14 @@ export const UNPUBLISH_EVENT = gql`
     }
   }
 `
+export const SET_REGISTRATION = gql`
+  mutation SetRegistration($eventId: ID!, $registrationType: RegistrationType!) {
+    setRegistration(eventId: $eventId, registrationType: $registrationType) {
+      id
+      registration
+    }
+  }
+`
 export const CREATE_DAY = gql`
   mutation CreateDay($eventID: ID!, $input: EventDayInput!) {
     createDay(eventID: $eventID, input: $input) {
