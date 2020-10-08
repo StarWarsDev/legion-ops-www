@@ -37,8 +37,8 @@ export const MY_PROFILE = gql`
     myProfile {
       account {
         ...User_user
-        username
       }
+      username
       organizedEvents {
         ...event_Event
       }

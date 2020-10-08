@@ -21,7 +21,7 @@ import { sortByName } from "utility/sort"
 import { makeStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
 import AddIcon from "@material-ui/icons/Add"
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import { RegistrationTypes } from "constants/event"
 
 const useStyles = makeStyles(theme => ({
@@ -44,34 +44,44 @@ export default function EventSideBar({
 }) {
   const classes = useStyles()
   const [registration, setRegistration] = useState(event.registration)
-  
+
   useEffect(() => {
     if (event.registration !== registration) {
       onRegistrationChange(registration)
     }
   }, [event, registration, onRegistrationChange])
 
-  const handleRegistrationChange = ({ target: { value }}) => {
+  const handleRegistrationChange = ({ target: { value } }) => {
     setRegistration(value)
   }
 
-  const profileIsOrganizer = profile && event.organizer.username === profile.email
+  const profileIsOrganizer =
+    profile && profile.account && event.organizer.id === profile.account.id
 
   const profileInJudges =
-    profile && event && event.judges.filter(judge => judge.username === profile.email)
-      .length > 0
+    profile &&
+    profile.account &&
+    event &&
+    event.judges.filter(judge => judge.id === profile.account.id).length > 0
 
   const profileInPlayers =
-    profile && event && event.players.filter(player => player.username === profile.email)
-      .length > 0
-  
-  const showRegisterButton = event.registration === "OPEN" &&
+    profile &&
+    profile.account &&
+    event &&
+    event.players.filter(player => player.id === profile.account.id).length > 0
+
+  const showRegisterButton =
+    event.registration === "OPEN" &&
     isAuthenticated &&
     profile &&
+    profile.account &&
     !profileIsOrganizer &&
     !profileInJudges &&
     !profileInPlayers
   const showLeaveButton = isAuthenticated && profile && profileInPlayers
+
+  const isMe = player =>
+    profile && profile.account ? player.id === profile.account.id : false
 
   return (
     <Fragment>
@@ -88,11 +98,19 @@ export default function EventSideBar({
                 <AssignmentIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Registration" secondary={canModifyEvent ? "" : event.registration} />
+            <ListItemText
+              primary="Registration"
+              secondary={canModifyEvent ? "" : event.registration}
+            />
             {canModifyEvent && (
-              <Select value={event.registration} onChange={e => handleRegistrationChange(e)}>
+              <Select
+                value={event.registration}
+                onChange={e => handleRegistrationChange(e)}
+              >
                 {Object.keys(RegistrationTypes).map(key => (
-                  <MenuItem key={key} value={key}>{RegistrationTypes[key]}</MenuItem>
+                  <MenuItem key={key} value={key}>
+                    {RegistrationTypes[key]}
+                  </MenuItem>
                 ))}
               </Select>
             )}
@@ -137,14 +155,30 @@ export default function EventSideBar({
 
       <div className={classes.rightPanel}>
         <UserList label="Staff">
-          <UserListItem user={event.organizer} label="Organizer" />
+          <UserListItem
+            name={event.organizer.name}
+            picture={event.organizer.picture}
+            label="Organizer"
+            isMe={isMe(event.organizer)}
+          />
 
           {event.headJudge && (
-            <UserListItem user={event.headJudge} label="Head Judge" />
+            <UserListItem
+              name={event.headJudge.name}
+              picture={event.headJudge.picture}
+              label="Head Judge"
+              isMe={isMe(event.headJudge)}
+            />
           )}
 
           {[...event.judges].sort(sortByName).map(judge => (
-            <UserListItem key={judge.id} user={judge} label="Judge" />
+            <UserListItem
+              key={judge.id}
+              name={judge.name}
+              picture={judge.picture}
+              label="Judge"
+              isMe={isMe(judge)}
+            />
           ))}
         </UserList>
       </div>
@@ -160,7 +194,12 @@ export default function EventSideBar({
           onLeaveClick={onLeave}
         >
           {[...event.players].sort(sortByName).map(player => (
-            <UserListItem key={player.id} user={player} />
+            <UserListItem
+              key={`player-${player.id}`}
+              name={player.name}
+              picture={player.picture}
+              isMe={isMe(player)}
+            />
           ))}
         </UserList>
       </div>

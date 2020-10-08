@@ -17,9 +17,10 @@ import {
   SET_REGISTRATION,
   UNPUBLISH_EVENT,
 } from "constants/EventMutations"
-import { useCanModifyEvent, useIsAuthenticated, useProfile } from "hooks/auth"
+import { useCanModifyEvent, useIsAuthenticated } from "hooks/auth"
 import CreateMatchModal from "../../common/CreateMatchModal"
 import PublishButton from "./PublishButton"
+import { MY_PROFILE } from "constants/UserQueries"
 
 export default function Event({
   match: {
@@ -29,10 +30,10 @@ export default function Event({
   const history = useHistory()
   const location = useLocation()
   const [isAuthenticated] = useIsAuthenticated()
-  const [profile] = useProfile()
   const [addMatchIsOpen, setAddMatchIsOpen] = useState(false)
   const [selectedRound, setSelectedRound] = useState(null)
   const [canModifyEvent] = useCanModifyEvent(id)
+  const [myProfileResult] = useQuery({ query: MY_PROFILE })
 
   // load the event data
   const [eventQueryResult, refetchEvent] = useQuery({
@@ -91,6 +92,7 @@ export default function Event({
   }, [setRegistrationResult, refetchEvent])
 
   const { fetching, data, error } = eventQueryResult
+  const { myProfile } = myProfileResult.data || {myProfile:{account:{id:null}}}
 
   if (fetching || !data) {
     return <LoadingWidget />
@@ -98,6 +100,11 @@ export default function Event({
 
   if (error) {
     const err = error
+    return <ErrorFallback error={err} message={err.message} />
+  }
+
+  if (myProfileResult.error && isAuthenticated) {
+    const err = myProfileResult.error
     return <ErrorFallback error={err} message={err.message} />
   }
 
@@ -203,7 +210,7 @@ export default function Event({
             event={event}
             canModifyEvent={canModifyEvent}
             isAuthenticated={isAuthenticated}
-            profile={profile}
+            profile={myProfile}
             onAddDay={() => history.push(`/event/${id}/add-day`)}
             onRegister={handleRegister}
             onLeave={handleLeave}
