@@ -7,13 +7,13 @@ import {
 } from "@material-ui/core"
 import FaceIcon from "@material-ui/icons/Face"
 
-export default function UserListItem({ user, label }) {
+export default function UserListItem({ name, picture, label, isMe }) {
   return (
-    <ListItem>
+    <ListItem selected={isMe}>
       <ListItemAvatar>
-        {user.picture ? <Avatar src={user.picture} /> : <FaceIcon />}
+        {picture ? <Avatar src={picture} /> : <FaceIcon />}
       </ListItemAvatar>
-      <ListItemText primary={user.name} secondary={label ? label : ""} />
+      <ListItemText primary={name} secondary={label ? label : ""} />
     </ListItem>
   )
 }
